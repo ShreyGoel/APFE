@@ -44,10 +44,13 @@ def GetCov(data, T = None):
     
     # fill the covariance matrix
     for i in range(nReturns):
-        for j in range(nReturns):
+        for j in range(i, nReturns):
             cov[i,j] = np.mean(returns[:,i]*returns[:,j])
     
-    return cov
+    out = cov.T + cov
+    np.fill_diagonal(out,np.diag(cov))
+    
+    return out
 
 cov = GetCov(prices)
 
