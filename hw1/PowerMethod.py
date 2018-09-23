@@ -10,7 +10,7 @@ import numpy as np
 import copy
 
 # read matrix
-matrix = np.genfromtxt(r"C:\Users\Shrey\Documents\GitHub\APFE\hw1\russell_cov.csv", delimiter = ',')
+matrix = np.genfromtxt("russell_cov.csv", delimiter = ',')
 
 # input tolerance
 tol = 0.01
