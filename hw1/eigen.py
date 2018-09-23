@@ -45,6 +45,10 @@ for i in xrange(nrows):
     for j in xrange(nrows):
         sigma[i][j] = float(line[j])
 
+print sigma
+# with open("C:/Users/uc244530/Dropbox/Work/columbia/fall_18/application_programming_for_fe/russell_cov.csv","w+") as my_csv:
+#     csvWriter = csv.writer(my_csv,delimiter=',')
+#     csvWriter.writerows(sigma)
 # compute the eigenvalues and eigenvectors
 
 start = time.clock()
@@ -71,7 +75,9 @@ for i in range(num_eig):
     f.write('\n')
 f.close()
 
-in_txt = csv.reader(open('C:/Users/uc244530/Dropbox/Work/columbia/fall_18/application_programming_for_fe/diag_F_numpy.txt', 'rb'), delimiter = '\t')
+in_txt = csv.reader(open('C:/Users/uc244530/Dropbox/Work/columbia/fall_18/application_programming_for_fe/diag_F_numpy.txt', 'rb'), delimiter = ' ')
 out_csv = csv.writer(open('C:/Users/uc244530/Dropbox/Work/columbia/fall_18/application_programming_for_fe/diag_F_numpy.csv', 'wb'))
-in_txt = csv.reader(open('C:/Users/uc244530/Dropbox/Work/columbia/fall_18/application_programming_for_fe/V_numpy.txt', 'rb'), delimiter = '\t')
+out_csv.writerows(in_txt)
+in_txt = csv.reader(open('C:/Users/uc244530/Dropbox/Work/columbia/fall_18/application_programming_for_fe/V_numpy.txt', 'rb'), delimiter = ' ')
 out_csv = csv.writer(open('C:/Users/uc244530/Dropbox/Work/columbia/fall_18/application_programming_for_fe/V_numpy.csv', 'wb'))
+out_csv.writerows(in_txt)
