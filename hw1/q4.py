@@ -4,15 +4,16 @@ Created on Sun Sep 23 16:05:42 2018
 
 @author: Shrey
 """
-
+from q2 import GetCov, GetPrices
 import numpy as np
 import copy
 
-# read matrix
-matrix = np.genfromtxt(r"C:\Users\Shrey\Documents\GitHub\APFE\hw1\russell_cov.csv", delimiter = ',')
+prices = GetPrices()
+
+matrix = GetCov(prices)
 
 # input tolerance
-tol = 0.01
+tol = 0.001
 
 refMatrix = copy.deepcopy(matrix)
 
@@ -23,12 +24,18 @@ def GetEigens(matrix, tol):
     
     # repeat until eigenvalue to biggest eigenvalue ratio goes below tolerance
     for i in range(matrixShape):
-        eigenVector = np.random.normal(size=(matrixShape))
+        eigenVectorRandom = np.random.normal(size=(matrixShape))
         
         # used for loop so that loop terminates in 100 iterations for sure
         for k in range(100):
-            prevEigenVector = copy.deepcopy(eigenVector)
-            eigenVector = np.matmul(matrix ** (2 ** k), eigenVector)
+            
+            if k==0:
+                prevEigenVector = copy.deepcopy(eigenVectorRandom)
+            else:
+                prevEigenVector = copy.deepcopy(eigenVector)
+                matrix = np.matmul(matrix, matrix)
+
+            eigenVector = np.matmul(matrix, eigenVectorRandom)
             eigenVector = eigenVector/np.linalg.norm(eigenVector)
             eigenValue = np.matmul(np.matmul(eigenVector.T, matrix), eigenVector)
             
@@ -42,10 +49,10 @@ def GetEigens(matrix, tol):
         if eigenValue/eigenValues[0] > tol:
             x = np.outer(eigenVector, eigenVector)
             matrix = matrix - eigenValue * x
-            
         else:
             break
     
     return eigenValues, eigenVectors
 
+eigenValues, eigenVectors = GetEigens(matrix, tol)
 F, V = np.linalg.eigh(refMatrix)

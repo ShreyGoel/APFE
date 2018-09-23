@@ -9,22 +9,23 @@ import numpy as np
 import pandas as pd
 from PowerMethod import GetEigens
 
-#read file
-with open('missing.dat') as f:
-    prices = [line.split() for line in f]  
-
-# clean matrix 
-metrics = prices[0]
-prices = pd.DataFrame(prices[1:]).T
-
-#use last available price to fill nans
-prices = prices.replace('NA', np.nan).fillna(method = 'ffill').iloc[:,:-1].astype(float)
-
-#use mean price for corner cases
-prices = prices.fillna(prices.mean())
-
-#convert to numpy array
-prices = prices.values
+def GetPrices():
+    #read file
+    with open('missing.dat') as f:
+        prices = [line.split() for line in f]  
+    
+    # clean matrix 
+    prices = pd.DataFrame(prices[1:]).T
+    
+    #use last available price to fill nans
+    prices = prices.replace('NA', np.nan).fillna(method = 'ffill').iloc[:,:-1].astype(float)
+    
+    #use mean price for corner cases
+    prices = prices.fillna(prices.mean())
+    
+    #convert to numpy array
+    prices = prices.values
+    return prices
 
 def GetCov(data, T = None):
     # get returns
@@ -52,6 +53,6 @@ def GetCov(data, T = None):
     
     return out
 
-cov = GetCov(prices)
+cov = GetCov(GetPrices())
 
 eigenValue, eigenVector = GetEigens(cov, 0.01)

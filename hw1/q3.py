@@ -7,26 +7,10 @@ python 3.6
 """
 
 from PowerMethod import GetEigens
-from q2 import GetCov
-import numpy as np
-import pandas as pd
-
-#read file
-with open('missing.dat') as f:
-    prices = [line.split() for line in f]  
-
-# clean matrix 
-metrics = prices[0]
-prices = pd.DataFrame(prices[1:]).T
-
-#use last available price to fill nans
-prices = prices.replace('NA', np.nan).fillna(method = 'ffill').iloc[:,:-1].astype(float)
-
-#use mean price for corner cases
-prices = prices.fillna(prices.mean())
+from q2 import GetCov, GetPrices
 
 #convert to numpy array
-prices = prices.values
+prices = GetPrices()
 
 nPrices = prices.shape[0]
 
