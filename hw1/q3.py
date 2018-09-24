@@ -8,21 +8,20 @@ python 3.6
 
 from PowerMethod import GetEigens
 from q2 import GetCov, GetPrices
+import numpy as np
 
 #convert to numpy array
 prices = GetPrices()
 
 nPrices = prices.shape[0]
 
-covs = []
 eigenValues = []
 eigenVectors = []
 
 for t in range(2, nPrices):
     cov = GetCov(prices, t)
-    eigenValue, eigenVector = GetEigens(cov, 0.01)
     
-    covs.append(cov)
-    eigenValues.append(eigenValue)
-    eigenVectors.append(eigenVector)
+    eigenValue, eigenVector = GetEigens(np.linalg.matrix_power(cov, 2), 0.01)
+    eigenValue = np.sqrt(eigenValue)
     
+    eigenValues.append(eigenValue)    
