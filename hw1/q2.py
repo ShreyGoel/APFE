@@ -42,7 +42,7 @@ def GetCov(data, T = None):
     #initialize numpy array for loop
     nReturns = returns.shape[1]
     cov = np.zeros((nReturns, nReturns))
-    
+
     # fill the covariance matrix
     for i in range(nReturns):
         for j in range(i, nReturns):
