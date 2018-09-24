@@ -9,7 +9,6 @@ python 3.6
 from PowerMethod import GetEigens
 from q2 import GetCov, GetPrices
 import numpy as np
-import itertools
 import matplotlib.pyplot as plt
 
 #convert to numpy array
@@ -17,16 +16,12 @@ prices = GetPrices()
 
 nPrices = prices.shape[0]
 
-eigenValues = [np.nan] * (nPrices - 2)
+ranks = [np.nan] * (nPrices - 2)
 
 for t in range(2, nPrices):
     cov = GetCov(prices, t)
-    
-    eigenValue, eigenVector = GetEigens(cov, 1)
-#    eigenValue = np.sqrt(eigenValue)
+    rank = np.linalg.matrix_rank(cov)
     print(t)
-    eigenValues[t-2] = eigenValue
+    ranks[t-2] = rank
 
-eigenValues = list(itertools.chain(*eigenValues))
-
-plt.plot(list(range(nPrices - 2)), eigenValues)
+plt.plot(list(range(2, nPrices)), ranks)
