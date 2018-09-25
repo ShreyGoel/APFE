@@ -18,10 +18,9 @@ nPrices = prices.shape[0]
 
 ranks = [np.nan] * (nPrices - 2)
 
-for t in range(2, nPrices):
+for t in range(2, nPrices-1):
     cov = GetCov(prices, t)
     rank = np.linalg.matrix_rank(cov)
-    print(t)
     ranks[t-2] = rank
 
 plt.plot(list(range(nPrices, 2, -1)), ranks)

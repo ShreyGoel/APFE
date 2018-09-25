@@ -33,7 +33,7 @@ def GetCov(data, T = None):
     
     #return only T days of returns data
     if T:
-        returns = returns[:-T]
+        returns = returns[:-T+1]
     
     #remove mean of returns from returns
     meanReturns = np.mean(returns, axis = 0)
@@ -41,17 +41,10 @@ def GetCov(data, T = None):
     
     #initialize numpy array for loop
     nReturns = returns.shape[1]
-    cov = np.zeros((nReturns, nReturns))
-
-    # fill the covariance matrix
-    for i in range(nReturns):
-        for j in range(i, nReturns):
-            cov[i,j] = np.mean(returns[:,i]*returns[:,j])
     
-    out = cov.T + cov
-    np.fill_diagonal(out,np.diag(cov))
+    cov = (1/nReturns) * np.matmul(returns.T, returns)
     
-    return out
+    return cov
 
 cov = GetCov(GetPrices())
 
