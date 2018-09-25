@@ -24,4 +24,4 @@ for t in range(2, nPrices):
     print(t)
     ranks[t-2] = rank
 
-plt.plot(list(range(2, nPrices)), ranks)
+plt.plot(list(range(nPrices, 2, -1)), ranks)
