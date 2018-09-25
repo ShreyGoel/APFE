@@ -5,7 +5,7 @@ Created on Sun Sep 23 16:05:42 2018
 @author: Shrey
 """
 from q2 import GetCov, GetPrices
-from PowerMethod import GetEigens
+from q1 import GetEigens
 import numpy as np
 import copy, time
 

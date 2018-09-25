@@ -7,7 +7,7 @@ python 3.6
 """
 import numpy as np
 import pandas as pd
-from PowerMethod import GetEigens
+from q1 import GetEigens
 
 def GetPrices():
     #read file
