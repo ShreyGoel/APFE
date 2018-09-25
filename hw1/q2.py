@@ -33,7 +33,7 @@ def GetCov(data, T = None):
     
     #return only T days of returns data
     if T:
-        returns = returns[:-T+1]
+        returns = returns[:T]
     
     #remove mean of returns from returns
     meanReturns = np.mean(returns, axis = 0)

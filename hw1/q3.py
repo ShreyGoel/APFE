@@ -5,8 +5,6 @@ Created on Sun Sep 23 15:51:39 2018
 python 3.6
 
 """
-
-from PowerMethod import GetEigens
 from q2 import GetCov, GetPrices
 import numpy as np
 import matplotlib.pyplot as plt
@@ -23,4 +21,4 @@ for t in range(2, nPrices-1):
     rank = np.linalg.matrix_rank(cov)
     ranks[t-2] = rank
 
-plt.plot(list(range(nPrices, 2, -1)), ranks)
+plt.plot(list(range(2, nPrices)), ranks)
