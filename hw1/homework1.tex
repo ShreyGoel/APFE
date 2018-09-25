@@ -27,7 +27,7 @@ The formula used for variance for jth security was (diagonal elements of the cov
 
 The covariance between jth and kth security was calculated as:-
 \begin{equation}
-  Cov(x_jx_k) = \sum_{i = 1}^{504} (\mu_{ij}-\overline{\mu})(\mu_{ik}-\overline{\mu})
+  Cov(x_jx_k) = \sum_{i = 1}^{504} (\mu_{ij}-\overline{\mu_j})(\mu_{ik}-\overline{\mu_k})
 \end{equation}
 
 For optimization purposes, we calculated the upper triangle of the covariance matrix and used it fill the lower triangle.
