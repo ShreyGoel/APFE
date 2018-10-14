@@ -1,0 +1,25 @@
+﻿  algo.c
+  feasible.c
+c:\users\shrey\source\repos\hw2_apfe\hw2_apfe\feasible.c(9): warning C4244: 'function': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\shrey\source\repos\hw2_apfe\hw2_apfe\feasible.c(36): warning C4102: 'BACK': unreferenced label
+  firstorder.c
+c:\users\shrey\source\repos\hw2_apfe\hw2_apfe\firstorder.c(24): warning C4047: 'function': 'char *' differs in levels of indirection from 'char (*)[12]'
+c:\users\shrey\source\repos\hw2_apfe\hw2_apfe\firstorder.c(24): warning C4024: 'readit': different types for formal and actual parameter 1
+  HW2_APFE.c
+c:\users\shrey\source\repos\hw2_apfe\hw2_apfe\hw2_apfe.c(20): warning C4047: 'function': 'char *' differs in levels of indirection from 'char (*)[12]'
+c:\users\shrey\source\repos\hw2_apfe\hw2_apfe\hw2_apfe.c(20): warning C4024: 'readit': different types for formal and actual parameter 1
+c:\users\shrey\source\repos\hw2_apfe\hw2_apfe\hw2_apfe.c(21): warning C4102: 'BACK': unreferenced label
+c:\users\shrey\source\repos\hw2_apfe\hw2_apfe\hw2_apfe.c(11): warning C4101: 'lambda': unreferenced local variable
+  improve.c
+c:\users\shrey\source\repos\hw2_apfe\hw2_apfe\improve.c(89): warning C4244: '+=': conversion from 'double' to 'int', possible loss of data
+c:\users\shrey\source\repos\hw2_apfe\hw2_apfe\improve.c(91): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+c:\users\shrey\source\repos\hw2_apfe\hw2_apfe\improve.c(98): warning C4102: 'BACK': unreferenced label
+c:\users\shrey\source\repos\hw2_apfe\hw2_apfe\improve.c(278): warning C4102: 'BACK': unreferenced label
+c:\users\shrey\source\repos\hw2_apfe\hw2_apfe\improve.c(292): warning C4102: 'BACK': unreferenced label
+c:\users\shrey\source\repos\hw2_apfe\hw2_apfe\improve.c(298): warning C4101: 'new_grad': unreferenced local variable
+  lpsolver.c
+c:\users\shrey\source\repos\hw2_apfe\hw2_apfe\lpsolver.c(5): fatal error C1083: Cannot open include file: 'gurobi_c++.h': No such file or directory
+  readit.c
+  sortIndex.c
+  Generating Code...
+c:\users\shrey\source\repos\hw2_apfe\hw2_apfe\improve.c(121): error C4700: uninitialized local variable 'index' used
