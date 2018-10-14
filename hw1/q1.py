@@ -49,4 +49,5 @@ def GetEigens(matrix, tol):
     
     return eigenValues, eigenVectors
 
+ei, ev = GetEigens(matrix, tol)
 F, V = np.linalg.eigh(refMatrix)
