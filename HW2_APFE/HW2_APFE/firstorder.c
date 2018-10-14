@@ -19,9 +19,7 @@ int main(int argc, char **argv)
 	  goto BACK;
   }
 
-  char filename[] = "example.txt";
-
-  retcode = readit(&filename, &myportfolio);
+  retcode = readit(argv[1], &myportfolio);
   
   myportfolio.x = (double *)calloc(myportfolio.n, sizeof(double));
   if(myportfolio.x==NULL){
@@ -31,30 +29,7 @@ int main(int argc, char **argv)
   }
 
   retcode = algo(&myportfolio);
-  /*//printf("Optimal solution portfolio combination is -- \n");
-  //for (int i = 0; i < myportfolio.n; i++)
-  //  printf("%f\n", myportfolio.x[i]);
-  opt = (double *)calloc(myportfolio.n, sizeof(double));
-  optimal_solution = fopen("opt_sol.csv", "r");
-  if (!optimal_solution) {
-    printf("can read optimal solution\n");
-    goto BACK;
-  }
-  for (int j = 0 ; j < myportfolio.n ; j++){
-    fscanf(optimal_solution,"%s", buffer);
-    opt[j] = atof(buffer);
-  }
 
-  printf("Objective function value for optimal solution from solver is\n");
-  for (int i = 0; i < myportfolio.n; i++){
-      F_x -= myportfolio.mu[i]*opt[i];
-      for (int j = 0; j <= i; j++){
-          if (j < i)
-              F_x += 2*myportfolio.lambda*myportfolio.covariance[i*myportfolio.n + j]*opt[i]*opt[j];
-          if (j == i)
-              F_x += myportfolio.lambda*myportfolio.covariance[i*myportfolio.n + j]*opt[i]*opt[j];
-      }
-  }*/
   printf("%f\n", F_x);
   BACK:
   return retcode;

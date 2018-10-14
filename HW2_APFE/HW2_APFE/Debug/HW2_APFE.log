@@ -1,1 +1,21 @@
-﻿  HW2_APFE.vcxproj -> C:\Users\Shrey\source\repos\HW2_APFE\Debug\HW2_APFE.exe
+﻿  algo.c
+  feasible.c
+c:\users\shrey\source\repos\hw2_apfe\hw2_apfe\feasible.c(9): warning C4244: 'function': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\shrey\source\repos\hw2_apfe\hw2_apfe\feasible.c(36): warning C4102: 'BACK': unreferenced label
+  firstorder.c
+c:\users\shrey\source\repos\hw2_apfe\hw2_apfe\firstorder.c(24): warning C4047: 'function': 'char *' differs in levels of indirection from 'char (*)[12]'
+c:\users\shrey\source\repos\hw2_apfe\hw2_apfe\firstorder.c(24): warning C4024: 'readit': different types for formal and actual parameter 1
+c:\users\shrey\source\repos\hw2_apfe\hw2_apfe\firstorder.c(12): warning C4101: 'optimal_solution': unreferenced local variable
+c:\users\shrey\source\repos\hw2_apfe\hw2_apfe\firstorder.c(13): warning C4101: 'opt': unreferenced local variable
+c:\users\shrey\source\repos\hw2_apfe\hw2_apfe\firstorder.c(14): warning C4101: 'buffer': unreferenced local variable
+  improve.c
+c:\users\shrey\source\repos\hw2_apfe\hw2_apfe\improve.c(89): warning C4244: '+=': conversion from 'double' to 'int', possible loss of data
+c:\users\shrey\source\repos\hw2_apfe\hw2_apfe\improve.c(91): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+c:\users\shrey\source\repos\hw2_apfe\hw2_apfe\improve.c(98): warning C4102: 'BACK': unreferenced label
+c:\users\shrey\source\repos\hw2_apfe\hw2_apfe\improve.c(277): warning C4102: 'BACK': unreferenced label
+c:\users\shrey\source\repos\hw2_apfe\hw2_apfe\improve.c(291): warning C4102: 'BACK': unreferenced label
+c:\users\shrey\source\repos\hw2_apfe\hw2_apfe\improve.c(297): warning C4101: 'new_grad': unreferenced local variable
+  readit.c
+  sortIndex.c
+  Generating Code...
+  HW2_APFE.vcxproj -> C:\Users\Shrey\source\repos\HW2_APFE\Debug\HW2_APFE.exe
