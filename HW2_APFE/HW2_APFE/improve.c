@@ -117,9 +117,8 @@ int stepdirection(portfolio *portfolio){
 //    retcode = lpsolver(portfolio);
     // allocate memory to hold the sorted gradient index
     
-
+	index = (int *)calloc(n, sizeof(int));
     portfolio->sorted_index = index; 
-    index = (int *)calloc(n, sizeof(int));
         
     retcode = sortIndex(portfolio->gradient, index, portfolio->n); 
         

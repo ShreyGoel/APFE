@@ -31,7 +31,7 @@ int main(int argc, char **argv)
   }
 
   retcode = algo(&myportfolio);
-  //printf("Optimal solution portfolio combination is -- \n");
+  /*//printf("Optimal solution portfolio combination is -- \n");
   //for (int i = 0; i < myportfolio.n; i++)
   //  printf("%f\n", myportfolio.x[i]);
   opt = (double *)calloc(myportfolio.n, sizeof(double));
@@ -54,7 +54,7 @@ int main(int argc, char **argv)
           if (j == i)
               F_x += myportfolio.lambda*myportfolio.covariance[i*myportfolio.n + j]*opt[i]*opt[j];
       }
-  }
+  }*/
   printf("%f\n", F_x);
   BACK:
   return retcode;
