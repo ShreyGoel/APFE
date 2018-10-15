@@ -174,20 +174,22 @@ if __name__ == '__main__':
     lamda = int(retval[0].split(" ")[1])
     mu = retval[1]
     q = retval[2]
-    x = initialize(mu)
-    counter = 0
-    step = 1
-    iteration = 0
-    while step > 0.000001 and iteration < 100:
-        counter = counter + 1
-        g = gradient(mu,q,lamda)
-        y = algo(g, mu)
-        if y == 0:
-            break
-        step = step_length(y, mu, q, x, lamda)
-        delta = [step*i for i in y]
-        tmp = [num1+num2 for num1,num2 in zip(x,delta)]
-        x = tmp
+    
+    if feasibility(mu):
+        x = initialize(mu)
+        counter = 0
+        step = 1
+        iteration = 0
+        while step > 0.000001 and iteration < 100:
+            counter = counter + 1
+            g = gradient(mu,q,lamda)
+            y = algo(g, mu)
+            if y == 0:
+                break
+            step = step_length(y, mu, q, x, lamda)
+            delta = [step*i for i in y]
+            tmp = [num1+num2 for num1,num2 in zip(x,delta)]
+            x = tmp
         
     print(x)
     print(sum(x))
