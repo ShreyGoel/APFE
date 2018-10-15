@@ -114,18 +114,12 @@ int stepdirection(dataStruct *data){
     //allocate memory for sorted x
     x = (double *)calloc(n, sizeof(double));
     
-//    retcode = lpsolver(data);
     // allocate memory to hold the sorted gradient index
     
 	index = (int *)calloc(n, sizeof(int));
     data->sorted_index = index; 
         
     retcode = sortIndex(data->gradient, index, data->n); 
-        
-    /** debug prints to check if sorted index is returned correctly
-    for (int i = 0; i < data->n; i++)
-        printf("%d\n", index[i]);
-    **/
   
     // compute sorted gradient
 
@@ -154,29 +148,19 @@ int stepdirection(dataStruct *data){
         double prod = 0;
         double sum_y = 0;
         for (int i = 0; i < n; i++){
-            //printf("i is %d\n", i);
-            if (i < m) {
+
+			if (i < m) {
                 y[i] = lb[i] - x[i];
                 sum_y +=y[i];
-
-                //printf("current sum is %f\n",sum_y);
-                //prod += g[i]*y[i];
             }
             if (i > m) {
                 y[i] = ub[i] - x[i];
                 sum_y +=y[i];
 
-                //printf("current sum is %f\n",sum_y);
-                //prod += g[i]*y[i];
             }
         }
         // as summation y(i) = 0; y(m) = -sum(y(i)) where i!=m
         y[m] = -1*sum_y;
-
-        //prod += g[m]*y[m];
-        //printf("y[m] is %f\n",y[m]);
-        //printf("bounds are %f   %f \n",(lb[m]-x[m]), (ub[m]-x[m]));
-        //printf("product is %f\n", prod);
 
         // if feasible y, compute g*y and calculate min_prod
         if ((y[m] >= lb[m] - x[m] - 0.00005) && (y[m] <= ub[m] - x[m] + 0.00005)){
