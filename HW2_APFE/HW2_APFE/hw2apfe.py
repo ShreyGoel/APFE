@@ -199,13 +199,16 @@ if __name__ == '__main__':
             x = tmp
 
 #Applying PCA to matrix q
-
+print()
 
 eig_vals, eig_vecs = np.linalg.eig(q)
+eig_vecs = eig_vecs[:2,:]
 print('Eigenvectors \n%s' %eig_vecs)
 print('\nEigenvalues \n%s' %eig_vals)
 print('explanation')
 print(np.matmul(eig_vecs.T, eig_vecs))
+print(np.matmul(eig_vecs, eig_vecs.T))
+print(np.sum(eig_vecs.T, axis = 0))
 v = np.array([eig_vecs[0], eig_vecs[1]])
 print('v = ', v)
 
