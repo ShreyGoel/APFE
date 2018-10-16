@@ -2,14 +2,10 @@
 """
 Created on Sun Oct 14 23:56:34 2018
 
-@author: Vinayak
 """
 
 import numpy as np
-import scipy as sc
 import pandas as pd
-import sys
-import os
 
 def read_file(fp):
     fp = "example.txt"
@@ -61,12 +57,12 @@ def read_file(fp):
 
 
 
-def feasibility(mu):
+def feasibility(lower, upper):
     sum_l = 0
-    for s in mu['lower'].tolist():
+    for s in lower:
         sum_l = sum_l + s
     sum_u = 0
-    for s in mu['upper'].tolist():
+    for s in upper:
         sum_u = sum_u + s
 
     retval = 0
@@ -76,9 +72,9 @@ def feasibility(mu):
     return(retval)
 
 
-def initialize(mu):
-    x = mu['lower'].tolist()
-    bracket = mu['upper'] - mu['lower']
+def initialize(lower, upper):
+    x = lower
+    bracket = upper - lower
     bracket = bracket.tolist()
     i = 0
     while sum(x) < 1:
@@ -94,22 +90,16 @@ def initialize(mu):
 
 
 def gradient(mu, q, lamda):
-    return [2*lamda*num1-num2 for num1,num2 in zip(np.matmul(q, x),mu['mu'].tolist())]
-
-
-#print(x)
+    return [2*lamda*num1-num2 for num1,num2 in zip(np.matmul(q, x),mu)]
 
 
 def algo(gradient, mu):
     gr = np.array(gradient)
     sort_index = np.argsort(gr)[::-1]
     sort_array = np.sort(gr)[::-1]
-
     x_sort = [x[i] for i in sort_index]
-    l_sort = [mu['lower'].tolist()[i] for i in sort_index]
-    u_sort = [mu['upper'].tolist()[i] for i in sort_index]
-
-
+    l_sort = [lower[i] for i in sort_index]
+    u_sort = [upper[i] for i in sort_index]
 
     m = range(0, len(x))
     res_check = []
@@ -123,7 +113,7 @@ def algo(gradient, mu):
             l_b = [l_sort[j] for j in l_l]
             x_b = [x_sort[j] for j in l_l]
             l_a = [num1-num2 for num1,num2 in zip(l_b,x_b)]
-            sum_all = sum_all + sum(l_a)
+            sum_all = sum_all + np.sum(l_a)
         else:
             l_a = []
         
@@ -131,16 +121,11 @@ def algo(gradient, mu):
             u_b = [u_sort[j] for j in u_l]
             x_b = [x_sort[j] for j in u_l]
             u_a = [num1-num2 for num1,num2 in zip(u_b,x_b)]
-            sum_all = sum_all + sum(u_a)
+            sum_all = sum_all + np.sum(u_a)
         else:
             u_a = []        
-        #   print(u_a)
         
         y_rem = (-1)*sum_all
-        # print("yrem: "+str(y_rem))
-        # print("Lower: "+str(l_sort[i] - x_sort[i]))
-        # print("upper: "+str(u_sort[i] - x_sort[i]))
-        # print("\n")
 
         if y_rem >= (l_sort[i] - x_sort[i]) and y_rem <= (u_sort[i] - x_sort[i]): 
             y_res = l_a + [y_rem] + u_a
@@ -165,7 +150,7 @@ def algo(gradient, mu):
     return(retval)
 
 def step_length(y, mu, q, x, lamda):
-    num = np.matmul(mu['mu'].tolist(), y) - 2*np.matmul(y, np.matmul(q, x))
+    num = np.matmul(mu, y) - 2*lamda*np.matmul(y, np.matmul(q, x))
     den = 2*lamda*np.matmul(y, np.matmul(q, y))
     step = num/den
     if step > 1:
@@ -181,13 +166,29 @@ if __name__ == '__main__':
     lamda = int(retval[0].split(" ")[1])
     mu = retval[1]
     q = retval[2]
+    n_eigs = 2
     
-    if feasibility(mu):
-        x = initialize(mu)
+    eig_vals, eig_vecs = np.linalg.eig(q)
+    eig_vecs = eig_vecs[:n_eigs,:]
+    eig_vals = eig_vals[:n_eigs]
+    
+    D = np.diag(np.sum(eig_vecs.T, axis = 0))
+    
+    F = np.diag(eig_vals)
+    
+    D_inv = np.linalg.inv(D)
+    q = np.matmul(np.matmul(D_inv, F), D_inv)
+    lower = np.matmul(np.matmul(D, eig_vecs), mu['lower'].values.T)
+    upper = np.matmul(np.matmul(D, eig_vecs), mu['upper'].values.T)
+
+    mu = np.matmul(np.matmul(mu['mu'].values.T, eig_vecs.T), D_inv)    
+    
+    if feasibility(lower, upper):
+        x = initialize(lower, upper)
         counter = 0
         step = 1
-        iteration = 0
-        while step > 0.000001 and iteration < 100:
+
+        while step > 0.000001 and counter < 100:
             counter = counter + 1
             g = gradient(mu,q,lamda)
             y = algo(g, mu)
@@ -197,19 +198,7 @@ if __name__ == '__main__':
             delta = [step*i for i in y]
             tmp = [num1+num2 for num1,num2 in zip(x,delta)]
             x = tmp
-
-#Applying PCA to matrix q
-print()
-
-eig_vals, eig_vecs = np.linalg.eig(q)
-eig_vecs = eig_vecs[:2,:]
-print('Eigenvectors \n%s' %eig_vecs)
-print('\nEigenvalues \n%s' %eig_vals)
-print('explanation')
-print(np.matmul(eig_vecs.T, eig_vecs))
-print(np.matmul(eig_vecs, eig_vecs.T))
-print(np.sum(eig_vecs.T, axis = 0))
-v = np.array([eig_vecs[0], eig_vecs[1]])
-print('v = ', v)
-
-
+    
+    print(x)
+    print(sum(x))
+    print(counter)
