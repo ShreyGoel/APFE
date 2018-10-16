@@ -1,5 +1,8 @@
 import numpy as np
+import scipy as sc
 import pandas as pd
+import sys
+import os
 
 def read_file(fp):
     fp = "example.txt"
@@ -127,6 +130,10 @@ def algo(gradient, mu):
         #   print(u_a)
         
         y_rem = (-1)*sum_all
+        # print("yrem: "+str(y_rem))
+        # print("Lower: "+str(l_sort[i] - x_sort[i]))
+        # print("upper: "+str(u_sort[i] - x_sort[i]))
+        # print("\n")
 
         if y_rem >= (l_sort[i] - x_sort[i]) and y_rem <= (u_sort[i] - x_sort[i]): 
             y_res = l_a + [y_rem] + u_a
@@ -151,7 +158,7 @@ def algo(gradient, mu):
     return(retval)
 
 def step_length(y, mu, q, x, lamda):
-    num = np.matmul(mu['mu'].tolist(), y) - 2*lamda*np.matmul(y, np.matmul(q, x))
+    num = np.matmul(mu['mu'].tolist(), y) - 2*np.matmul(y, np.matmul(q, x))
     den = 2*lamda*np.matmul(y, np.matmul(q, y))
     step = num/den
     if step > 1:
@@ -172,8 +179,8 @@ if __name__ == '__main__':
         x = initialize(mu)
         counter = 0
         step = 1
-
-        while step > 0.001 and counter < 500:
+        iteration = 0
+        while step > 0.000001 and iteration < 100:
             counter = counter + 1
             g = gradient(mu,q,lamda)
             y = algo(g, mu)
@@ -187,3 +194,79 @@ if __name__ == '__main__':
     print(x)
     print(sum(x))
     print(counter)
+
+
+
+
+# import sys
+# import csv
+# import numpy as np
+# from cvxopt import matrix, solvers
+
+# K=4
+# print(type(q))
+# print(q)
+# P = matrix(q.as_matrix()*5)
+# #print np.identity(K)
+# q = matrix(-1*mu['mu'])
+# #print q
+# G = matrix(np.concatenate((-np.identity(K), np.identity(K)),0))
+# print(np.concatenate((-np.identity(K), np.identity(K)),0))
+# print(np.concatenate((mu['lower'].as_matrix(), mu['upper'].as_matrix())))
+# h = matrix(np.concatenate((mu['lower'].as_matrix(), mu['upper'].as_matrix())))
+# #h = matrix(np.concatenate(np.concatenate((mu['lower'].as_matrix()*np.ones((K,1)), mu['upper'].as_matrix()*np.ones((K,1))),0))
+# #print(np.ones((K,1)))
+# A = matrix(np.ones((1,K)))
+# b = matrix(1.0)
+
+# opt = open("opt_sol.csv", 'w')
+# sol = solvers.qp(P, q, G, h, A, b)
+# for x in sol["x"]:
+#     #print float(x)
+#     opt.write(str(x))
+#     opt.write('\n')
+
+# print(sol['x'])    
+
+
+
+
+
+
+
+
+
+
+"""
+
+
+for i in m:
+    l_l = [j for j in m if j < i]
+    u_l = [j for j in m if j > i]
+    sum_all = 0
+
+    if len(l_l) > 0:
+        u_i = sort_index[l_l]
+        l_b = [mu['upper'].tolist()[i] for i in u_i]
+        x_b = [x[i] for i in u_i]
+        l_a = [num1-num2 for num1,num2 in zip(l_b,x_b)]
+        sum_all = sum_all + sum(l_a)
+    #    print(l_a)
+    
+    if len(u_l) > 0:
+        u_i = sort_index[u_l]
+        u_b = [mu['upper'].tolist()[i] for i in u_i]
+        x_b = [x[i] for i in u_i]
+        u_a = [num1-num2 for num1,num2 in zip(u_b,x_b)]
+        sum_all = sum_all + sum(u_a)        
+     #   print(u_a)
+
+    y_rem = (-1)*sum_all
+    if y_rem >= (l_sort[i] - x_sort[i]) and y_rem <= (u_sort[i] - x_sort[i]): 
+        print(y_rem)    
+
+#while y != 0 and m < len(x):
+
+
+#def gradient_descent(gradient):
+"""

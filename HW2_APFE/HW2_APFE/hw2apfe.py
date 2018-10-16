@@ -1,5 +1,12 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Oct 14 23:56:34 2018
+
+"""
+
 import numpy as np
 import pandas as pd
+import copy
 
 def read_file(fp):
     fp = "example.txt"
@@ -51,12 +58,12 @@ def read_file(fp):
 
 
 
-def feasibility(mu):
+def feasibility(lower, upper):
     sum_l = 0
-    for s in mu['lower'].tolist():
+    for s in lower:
         sum_l = sum_l + s
     sum_u = 0
-    for s in mu['upper'].tolist():
+    for s in upper:
         sum_u = sum_u + s
 
     retval = 0
@@ -66,40 +73,34 @@ def feasibility(mu):
     return(retval)
 
 
-def initialize(mu):
-    x = mu['lower'].tolist()
-    bracket = mu['upper'] - mu['lower']
+def initialize(lower, upper):
+    x = copy.deepcopy(lower)
+    bracket = upper - lower
     bracket = bracket.tolist()
-    i = 0
-    while sum(x) < 1:
-        x_i = x[i]
-        inc = round(1 - sum(x), 5)
-        if bracket[i] > inc:
-            x[i] = x_i + inc
-        else:
-            x[i] = x_i + bracket[i]
-        i = i + 1
 
+    while sum(x) < 1:
+        for i in range(len(x)):
+            x_i = x[i]
+            inc = round(1 - sum(x), 5)
+            if bracket[i] > inc:
+                x[i] = x_i + inc
+            else:
+                x[i] = x_i + bracket[i]
+    
     return x
 
 
 def gradient(mu, q, lamda):
-    return [2*lamda*num1-num2 for num1,num2 in zip(np.matmul(q, x),mu['mu'].tolist())]
+    return [2*lamda*num1-num2 for num1,num2 in zip(np.matmul(q, x),mu)]
 
 
-#print(x)
-
-
-def algo(gradient, mu):
+def algo(gradient, lower, upper):
     gr = np.array(gradient)
     sort_index = np.argsort(gr)[::-1]
     sort_array = np.sort(gr)[::-1]
-
     x_sort = [x[i] for i in sort_index]
-    l_sort = [mu['lower'].tolist()[i] for i in sort_index]
-    u_sort = [mu['upper'].tolist()[i] for i in sort_index]
-
-
+    l_sort = [lower[i] for i in sort_index]
+    u_sort = [upper[i] for i in sort_index]
 
     m = range(0, len(x))
     res_check = []
@@ -124,18 +125,13 @@ def algo(gradient, mu):
             sum_all = sum_all + sum(u_a)
         else:
             u_a = []        
-        #   print(u_a)
         
         y_rem = (-1)*sum_all
 
         if y_rem >= (l_sort[i] - x_sort[i]) and y_rem <= (u_sort[i] - x_sort[i]): 
             y_res = l_a + [y_rem] + u_a
             res_check.append(y_res)     
-
-
-
-# if(len(res_check) != 1):
-
+            
     if(len(res_check) > 0):
         comp_descent = []
         for arr in res_check:
@@ -145,14 +141,16 @@ def algo(gradient, mu):
         val, idx = min((val, idx) for (idx, val) in enumerate(comp_descent))
 
         retval = [res_check[idx][i] for i in resort_index]
+
     else:
         print("Problem not feasible")
         retval = 0
     return(retval)
 
 def step_length(y, mu, q, x, lamda):
-    num = np.matmul(mu['mu'].tolist(), y) - 2*lamda*np.matmul(y, np.matmul(q, x))
+    num = np.matmul(mu, y) - 2*lamda*np.matmul(y, np.matmul(q, x))
     den = 2*lamda*np.matmul(y, np.matmul(q, y))
+
     step = num/den
     if step > 1:
         step = 1
@@ -167,23 +165,41 @@ if __name__ == '__main__':
     lamda = int(retval[0].split(" ")[1])
     mu = retval[1]
     q = retval[2]
+    n_eigs = 2
     
-    if feasibility(mu):
-        x = initialize(mu)
+    eig_vals, eig_vecs = np.linalg.eig(q)
+    eig_vecs = eig_vecs[:n_eigs,:]
+    eig_vals = eig_vals[:n_eigs]
+    
+    D = np.diag(np.sum(eig_vecs.T, axis = 0))
+    
+    F = np.diag(eig_vals)
+    
+    D_inv = np.linalg.inv(D)
+    q = np.matmul(np.matmul(D_inv, F), D_inv)
+    lower = np.matmul(np.matmul(D, eig_vecs), mu['lower'].values.T)
+    upper = np.matmul(np.matmul(D, eig_vecs), mu['upper'].values.T)
+        
+    mu = np.matmul(np.matmul(mu['mu'].values.T, eig_vecs.T), D_inv)    
+    
+    if feasibility(lower, upper):
+        x = initialize(lower, upper)
         counter = 0
         step = 1
 
-        while step > 0.001 and counter < 500:
+        while step > 0.000001 and counter < 100:
             counter = counter + 1
             g = gradient(mu,q,lamda)
-            y = algo(g, mu)
+            y = algo(g, lower, upper)
             if y == 0:
                 break
             step = step_length(y, mu, q, x, lamda)
             delta = [step*i for i in y]
             tmp = [num1+num2 for num1,num2 in zip(x,delta)]
             x = tmp
-        
+    
+    x = np.matmul(eig_vecs.T, np.matmul(D_inv, x))
+    
     print(x)
     print(sum(x))
     print(counter)

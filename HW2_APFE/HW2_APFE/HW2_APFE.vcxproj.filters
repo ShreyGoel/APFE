@@ -15,28 +15,16 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="firstorder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <ClCompile Include="flowControl.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="improveSolution.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="algo.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="feasible.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="firstorder.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="improve.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="readit.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sortIndex.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <ClInclude Include="importantHeaders.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
