@@ -6,6 +6,7 @@ Created on Sun Oct 14 23:56:34 2018
 
 import numpy as np
 import pandas as pd
+import copy
 
 def read_file(fp):
     fp = "example.txt"
@@ -73,19 +74,19 @@ def feasibility(lower, upper):
 
 
 def initialize(lower, upper):
-    x = lower
+    x = copy.deepcopy(lower)
     bracket = upper - lower
     bracket = bracket.tolist()
-    i = 0
-    while sum(x) < 1:
-        x_i = x[i]
-        inc = round(1 - sum(x), 5)
-        if bracket[i] > inc:
-            x[i] = x_i + inc
-        else:
-            x[i] = x_i + bracket[i]
-        i = i + 1
 
+    while sum(x) < 1:
+        for i in range(len(x)):
+            x_i = x[i]
+            inc = round(1 - sum(x), 5)
+            if bracket[i] > inc:
+                x[i] = x_i + inc
+            else:
+                x[i] = x_i + bracket[i]
+    
     return x
 
 
@@ -93,7 +94,7 @@ def gradient(mu, q, lamda):
     return [2*lamda*num1-num2 for num1,num2 in zip(np.matmul(q, x),mu)]
 
 
-def algo(gradient, mu):
+def algo(gradient, lower, upper):
     gr = np.array(gradient)
     sort_index = np.argsort(gr)[::-1]
     sort_array = np.sort(gr)[::-1]
@@ -113,7 +114,7 @@ def algo(gradient, mu):
             l_b = [l_sort[j] for j in l_l]
             x_b = [x_sort[j] for j in l_l]
             l_a = [num1-num2 for num1,num2 in zip(l_b,x_b)]
-            sum_all = sum_all + np.sum(l_a)
+            sum_all = sum_all + sum(l_a)
         else:
             l_a = []
         
@@ -121,7 +122,7 @@ def algo(gradient, mu):
             u_b = [u_sort[j] for j in u_l]
             x_b = [x_sort[j] for j in u_l]
             u_a = [num1-num2 for num1,num2 in zip(u_b,x_b)]
-            sum_all = sum_all + np.sum(u_a)
+            sum_all = sum_all + sum(u_a)
         else:
             u_a = []        
         
@@ -130,11 +131,7 @@ def algo(gradient, mu):
         if y_rem >= (l_sort[i] - x_sort[i]) and y_rem <= (u_sort[i] - x_sort[i]): 
             y_res = l_a + [y_rem] + u_a
             res_check.append(y_res)     
-
-
-
-# if(len(res_check) != 1):
-
+            
     if(len(res_check) > 0):
         comp_descent = []
         for arr in res_check:
@@ -144,6 +141,7 @@ def algo(gradient, mu):
         val, idx = min((val, idx) for (idx, val) in enumerate(comp_descent))
 
         retval = [res_check[idx][i] for i in resort_index]
+
     else:
         print("Problem not feasible")
         retval = 0
@@ -152,6 +150,7 @@ def algo(gradient, mu):
 def step_length(y, mu, q, x, lamda):
     num = np.matmul(mu, y) - 2*lamda*np.matmul(y, np.matmul(q, x))
     den = 2*lamda*np.matmul(y, np.matmul(q, y))
+
     step = num/den
     if step > 1:
         step = 1
@@ -180,7 +179,7 @@ if __name__ == '__main__':
     q = np.matmul(np.matmul(D_inv, F), D_inv)
     lower = np.matmul(np.matmul(D, eig_vecs), mu['lower'].values.T)
     upper = np.matmul(np.matmul(D, eig_vecs), mu['upper'].values.T)
-
+        
     mu = np.matmul(np.matmul(mu['mu'].values.T, eig_vecs.T), D_inv)    
     
     if feasibility(lower, upper):
@@ -191,13 +190,15 @@ if __name__ == '__main__':
         while step > 0.000001 and counter < 100:
             counter = counter + 1
             g = gradient(mu,q,lamda)
-            y = algo(g, mu)
+            y = algo(g, lower, upper)
             if y == 0:
                 break
             step = step_length(y, mu, q, x, lamda)
             delta = [step*i for i in y]
             tmp = [num1+num2 for num1,num2 in zip(x,delta)]
             x = tmp
+    
+    x = np.matmul(eig_vecs.T, np.matmul(D_inv, x))
     
     print(x)
     print(sum(x))
