@@ -1,0 +1,159 @@
+\documentclass[twoside,11pt]{article}
+\usepackage{amssymb}
+\title{IEOR 4500 Application Programming for FE \\
+  \large Assignment 2
+} % DON'T CHANGE THIS
+
+\author{Anurag Dutt, Shrey Goel, Jatindeep Singh, Vinayak Shinde, Aditya Zalte}    % YOUR NAME GOES HERE
+%\studmail{}% YOUR UNI GOES HERE
+%\hwNo{1}                   % THE HOMEWORK NUMBER GOES HERE
+%\collab{Group 19}   % THE UNI'S OF STUDENTS YOU DISCUSSED WITH
+
+% Uncomment the next line if you want to use \includegraphics.
+\usepackage{graphicx}
+\usepackage{amsmath}
+\begin{document}
+\maketitle
+This file includes te write-up and explanations for any of the problems in the aforementioned assignment
+
+\section*{Problem 2}
+% YOUR SOLUTION GOES HERE
+In the second part we transform the Q matrix as follows:-
+\begin{equation}
+  Q = V^TFV
+\end{equation}
+F is the diagonal matrix of the eigen values.
+V is 2x2 matrix because the first two assets with highest eigenvalues
+explain over 95\% variability of the portfolio. (Results from a PCA analysis)
+The optimization problem that we are trying to solve is:-
+
+\begin{equation}
+  F(x) = min.\; \lambda x^TQx - \mu^Tx
+\end{equation}
+where the constraints are:-
+\begin{equation}
+  1^Tx = 1
+\end{equation}
+\begin{equation}
+  Ix \geqslant L
+\end{equation}
+\begin{equation}
+  (-I)x \geqslant -U
+\end{equation}
+where L are the lower bounds vector and U is the upper bound vector.\\
+Substituting Q as shown in equation 1, the minimization problem
+changes to:
+\begin{equation}
+  F(x) = min.\; \lambda x^TV^TFVx - \mu^Tx
+\end{equation}
+where the constraints are:-
+\begin{equation}
+  1^Tx = 1
+\end{equation}
+\begin{equation}
+  Ix \geqslant L
+\end{equation}
+\begin{equation}
+  (-I)x \geqslant -U
+\end{equation}
+Taking the substitution:-
+\begin{equation}
+  Vx = y
+\end{equation}
+We do this substitution because our current function for solving the
+quadratic program accepts input in terms of $A^TBA$ and using the
+property of V:
+\begin{equation}
+  V^T = V^{-1}
+\end{equation}
+
+Hence the optimization problem changes to:-
+\begin{equation}
+  F(x) = min.\; \lambda y^TFy - \mu^TV^Ty
+\end{equation}
+where the constraints are:-
+\begin{equation}
+  1^TV^Ty = 1
+\end{equation}
+\begin{equation}
+  V^Ty \geqslant L
+\end{equation}
+\begin{equation}
+  -V^Ty \geqslant -U
+\end{equation}
+
+Again for verifying the constraint:
+\begin{equation}
+  1^TV^Ty = 1
+\end{equation}
+Our code accepts a vector of portfolio weights. Hence we introduce a
+matrix D such that:
+\begin{equation}
+  Dy = z
+\end{equation}
+or
+\begin{equation}
+  y = D^{-1}z
+\end{equation}
+For example in our case the constraint transforms to:-
+
+\[
+1 =
+  \begin{bmatrix}
+    -0.999 & 0.8523    
+  \end{bmatrix}
+  \begin{bmatrix}
+    y_1 \\
+    y_2    
+  \end{bmatrix}
+\]
+\begin{equation}
+  z_1 = -0.999y_1
+\end{equation}
+\begin{equation}
+  z_2 = -0.8523y_2
+\end{equation}
+And hence we get the vector of z such that:-
+\[
+  \begin{bmatrix}
+    z_1 \\
+    z_2    
+  \end{bmatrix}
+ =
+  \begin{bmatrix}
+    -0.999 & 0 \\
+    0 & 0.8523
+    
+  \end{bmatrix}
+  \begin{bmatrix}
+    y_1 \\
+    y_2    
+  \end{bmatrix}
+\]
+Hence the D matrix in our case is:
+\[
+D =
+  \begin{bmatrix}
+    -0.999 & 0 \\
+    0 & 0.8523
+    
+  \end{bmatrix}
+\]
+
+Hence the optimization problem finally changes to:-
+\begin{equation}
+  F(x) = min.\; \lambda z^TD^{-1}FD^{-1}z - \mu^TV^TD_{-1}z
+\end{equation}
+where the constraints are:-
+\begin{equation}
+  1^Z = 1
+\end{equation}
+\begin{equation}
+  Z \geqslant DVL
+\end{equation}
+\begin{equation}
+  -Z \geqslant -DVU
+\end{equation}
+
+
+\end{document} 
