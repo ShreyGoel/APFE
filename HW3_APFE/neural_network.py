@@ -244,6 +244,87 @@ def linear_backward(dZ, cache):
     
     return dA_prev, dW, db
 
+
+def linear_activation_backward(dA, cache, activation):
+    """
+    Implement the backward propagation for the LINEAR->ACTIVATION layer.
+    
+    Arguments:
+    dA -- post-activation gradient for current layer l 
+    cache -- tuple of values (linear_cache, activation_cache) we store for computing backward propagation efficiently
+    activation -- the activation to be used in this layer, stored as a text string: "sigmoid" or "relu"
+    
+    Returns:
+    dA_prev -- Gradient of the cost with respect to the activation (of the previous layer l-1), same shape as A_prev
+    dW -- Gradient of the cost with respect to W (current layer l), same shape as W
+    db -- Gradient of the cost with respect to b (current layer l), same shape as b
+    """
+    linear_cache, activation_cache = cache
+    
+    if activation == "relu":
+        ### START CODE HERE ### (≈ 2 lines of code)
+        dZ = relu_backward(dA, activation_cache)
+        ### END CODE HERE ###
+        
+    elif activation == "sigmoid":
+        ### START CODE HERE ### (≈ 2 lines of code)
+        dZ = sigmoid_backward(dA, activation_cache)
+        ### END CODE HERE ###
+    
+    # Shorten the code
+    dA_prev, dW, db = linear_backward(dZ, linear_cache)
+    
+    return dA_prev, dW, db
+
+def L_model_backward(AL, output_matrix, caches):
+    """
+    Implement the backward propagation for the [LINEAR->RELU] * (L-1) -> LINEAR -> SIGMOID group
+    
+    Arguments:
+    AL -- probability vector, output of the forward propagation (L_model_forward())
+    Y -- true "label" vector (containing 0 if non-cat, 1 if cat)
+    caches -- list of caches containing:
+                every cache of linear_activation_forward() with "relu" (it's caches[l], for l in range(L-1) i.e l = 0...L-2)
+                the cache of linear_activation_forward() with "sigmoid" (it's caches[L-1])
+    
+    Returns:
+    grads -- A dictionary with the gradients
+             grads["dA" + str(l)] = ... 
+             grads["dW" + str(l)] = ...
+             grads["db" + str(l)] = ... 
+    """
+    Y = output_matrix 
+    grads = {}
+    L = len(caches) # the number of layers
+    m = AL.shape[1]
+    Y = Y.reshape(AL.shape) # after this line, Y is the same shape as AL
+    
+    # Initializing the backpropagation
+    ### START CODE HERE ### (1 line of code)
+    #dAL = dAL = - (np.divide(Y, AL) - np.divide(1 - Y, 1 - AL)) Y-AL
+    dAL = (-2)*(Y-AL)
+    ### END CODE HERE ###
+    
+    # Lth layer (SIGMOID -> LINEAR) gradients. Inputs: "AL, Y, caches". Outputs: "grads["dAL"], grads["dWL"], grads["dbL"]
+    ### START CODE HERE ### (approx. 2 lines)
+    current_cache = caches[-1]
+    grads["dA" + str(L)], grads["dW" + str(L)], grads["db" + str(L)] = linear_backward(sigmoid_backward(dAL,current_cache[1]),current_cache[0])
+    ### END CODE HERE ###
+    
+    for l in reversed(range(L-1)):
+        # lth layer: (RELU -> LINEAR) gradients.
+        # Inputs: "grads["dA" + str(l + 2)], caches". Outputs: "grads["dA" + str(l + 1)] , grads["dW" + str(l + 1)] , grads["db" + str(l + 1)] 
+        ### START CODE HERE ### (approx. 5 lines)
+        current_cache = caches[l]
+        dA_prev_temp, dW_temp, db_temp = linear_backward(sigmoid_backward(dAL, current_cache[1]), current_cache[0])
+        grads["dA" + str(l + 1)] = dA_prev_temp
+        grads["dW" + str(l + 1)] = dW_temp
+        grads["db" + str(l + 1)] = db_temp
+        ### END CODE HERE ###
+
+    return grads
+
+
 if __name__ == "__main__":
 
 	dat = read_data("russell_prices.csv")
