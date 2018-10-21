@@ -1,0 +1,26 @@
+\documentclass[twoside,11pt]{homework}
+
+\coursename{IEOR 4720 Application Programming for FE } % DON'T CHANGE THIS
+
+\studname{Anurag Dutt, Shrey Goel, Jatindeep Singh, Vinayak Shinde, Aditya Zalte}    % YOUR NAME GOES HERE
+\studmail{}% YOUR UNI GOES HERE
+\hwNo{1}                   % THE HOMEWORK NUMBER GOES HERE
+\collab{Group 19}   % THE UNI'S OF STUDENTS YOU DISCUSSED WITH
+
+% Uncomment the next line if you want to use \includegraphics.
+\usepackage{graphicx}
+
+\begin{document}
+\maketitle
+\section*{Problem 2}
+The problem 1 and code are in the attached R code. The write-ups are
+written as comments in the the code itself. The code itself is
+attached in the end.
+
+% YOUR SOLUTION GOES HERE
+The first part is proof of law of total expectation. We will start
+from the R.H.S. and arrive at the L.H.S.
+Examples of bold-faced letters (perhaps suitable for matrix and
+vectors):
+
+\end{document} 
