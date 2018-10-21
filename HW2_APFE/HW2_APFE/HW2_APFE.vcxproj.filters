@@ -15,10 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="flowControl.c">
+    <ClCompile Include="q1_main.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="improveSolution.c">
+    <ClCompile Include="q1_helper.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

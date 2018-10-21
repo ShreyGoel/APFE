@@ -1,7 +1,15 @@
-﻿  improveSolution.c
-c:\users\shrey\documents\github\apfe\hw2_apfe\hw2_apfe\improvesolution.c(89): warning C4244: '+=': conversion from 'double' to 'int', possible loss of data
-c:\users\shrey\documents\github\apfe\hw2_apfe\hw2_apfe\improvesolution.c(91): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-c:\users\shrey\documents\github\apfe\hw2_apfe\hw2_apfe\improvesolution.c(98): warning C4102: 'BACK': unreferenced label
-c:\users\shrey\documents\github\apfe\hw2_apfe\hw2_apfe\improvesolution.c(260): warning C4102: 'BACK': unreferenced label
-c:\users\shrey\documents\github\apfe\hw2_apfe\hw2_apfe\improvesolution.c(274): warning C4102: 'BACK': unreferenced label
+﻿  q1_main.c
+c:\users\shrey\documents\github\apfe\hw2_apfe\hw2_apfe\q1_main.c(25): warning C4133: 'function': incompatible types - from 'FILE *' to 'char *'
+c:\users\shrey\documents\github\apfe\hw2_apfe\hw2_apfe\q1_main.c(12): warning C4133: 'initializing': incompatible types - from 'char [12]' to 'FILE *'
+c:\users\shrey\documents\github\apfe\hw2_apfe\hw2_apfe\q1_main.c(11): warning C4101: 'optimal_solution': unreferenced local variable
+c:\users\shrey\documents\github\apfe\hw2_apfe\hw2_apfe\q1_main.c(13): warning C4101: 'opt': unreferenced local variable
+c:\users\shrey\documents\github\apfe\hw2_apfe\hw2_apfe\q1_main.c(14): warning C4101: 'buffer': unreferenced local variable
+c:\users\shrey\documents\github\apfe\hw2_apfe\hw2_apfe\q1_main.c(99): warning C4102: 'BACK': unreferenced label
+  q1_helper.c
+c:\users\shrey\documents\github\apfe\hw2_apfe\hw2_apfe\q1_helper.c(89): warning C4244: '+=': conversion from 'double' to 'int', possible loss of data
+c:\users\shrey\documents\github\apfe\hw2_apfe\hw2_apfe\q1_helper.c(91): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+c:\users\shrey\documents\github\apfe\hw2_apfe\hw2_apfe\q1_helper.c(98): warning C4102: 'BACK': unreferenced label
+c:\users\shrey\documents\github\apfe\hw2_apfe\hw2_apfe\q1_helper.c(260): warning C4102: 'BACK': unreferenced label
+c:\users\shrey\documents\github\apfe\hw2_apfe\hw2_apfe\q1_helper.c(274): warning C4102: 'BACK': unreferenced label
+  Generating Code...
   HW2_APFE.vcxproj -> C:\Users\Shrey\Documents\GitHub\APFE\HW2_APFE\Debug\HW2_APFE.exe
