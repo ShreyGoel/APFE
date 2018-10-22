@@ -1,8 +1,0 @@
-Q2:-
-For handling the missing values, we arranged the returns matrix based on ascending order of time. The oldest values on top and the most recent values towards the last. Then we applied forward filling of the NA values such that corresponding cells took the returns of the previous date. We could also have done mean imputation where the cells containing NA values could have been filled with the mean of the previous and the next day's returns, but we didn't do mean imputation because it wouldn't have made sense to incorporate the future values into imputation of NA values. Hence we chose to stick with forward filling process.
-
-For calculating the covariance matrix
-
-Q4:-
-
-We used A^2 instead of A and it drastically reduced the runtime by almost 5. Thr initial runtime was 5.1 secs which reduced to 0.9 secs.
