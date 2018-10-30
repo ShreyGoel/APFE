@@ -16,6 +16,7 @@
 #include <math.h>
 using namespace std;
 #define M 100
+#define assets 947
 
 //ifstream myfile ("/Users/ashwinzalte/Desktop/3rd sem/Application Programming for FE/Homework/3/test.txt");
 
@@ -29,9 +30,9 @@ float sigmoid (float a)
 int main()
 {
     ifstream file;
-    file.open("/Users/ashwinzalte/Desktop/3rd sem/Application Programming for FE/Homework/3/russell_prices.txt");
-    double russell[948][505];
-    double ret_mat[948][504];
+    file.open("russell_prices.txt");
+    double russell[assets+1][505];
+    double ret_mat[assets+1][504];
     
     int i,j,k;
     // *** READING THE TXT FILE
@@ -39,7 +40,7 @@ int main()
     {
         while(!file.eof())
         {
-            for( i = 1; i <=947 ; i++)
+            for( i = 1; i <= assets; i++)
             {
                 for(j = 1; j <= 504; j++)
                 {
@@ -51,7 +52,7 @@ int main()
     file.close();
     
     // *** CALCULATING THE RETURNS MATRIX
-    for(i = 1; i <=947 ; i++)
+    for(i = 1; i <= assets; i++)
     {
         for(j = 1; j <= 503; j++)
         {
@@ -66,8 +67,8 @@ int main()
     //cout<< layer_dims[1];
     
     // ***  INITIALIZE_PARAMETERS_DEEP
-    static float W1[M+1][948],W2[M+1][M+1],W3[948][M+1];
-    static float b1[101],b2[101],b3[948];
+    static float W1[M+1][assets + 1],W2[M+1][M+1],W3[assets + 1][M+1];
+    static float b1[M+1],b2[M+1],b3[assets + 1];
     
     default_random_engine generator; //seed
     normal_distribution<float> distribution(0, 1); //mean followed by stdiv
@@ -75,7 +76,7 @@ int main()
     //Initialize W1 & b1
     for( i = 1; i <=M ; i++)
     {
-        for(j = 1; j <= 947; j++)
+        for(j = 1; j <= assets; j++)
         {
             W1[i][j] =0.01* distribution(generator); //Generate numbers;
             //cout<<W1[i][j]<<"   ";
@@ -93,7 +94,7 @@ int main()
         b2[i]=0;//cout<<endl;
     }
     //Initialize W3 & b3
-    for( i = 1; i <=947 ; i++)
+    for( i = 1; i <= assets; i++)
     {
         for(j = 1; j <= M; j++)
         {
@@ -102,8 +103,8 @@ int main()
         b3[i]=0;
     }
     // A- Sigmoid function
-    static float A[948][243];//B2[101],B3[947];
-    for( i = 1; i <=947 ; i++)
+    static float A[assets + 1][243];//B2[101],B3[947];
+    for( i = 1; i <= assets; i++)
     {
         for(j = 1; j <= 242; j++)
         {
@@ -115,8 +116,8 @@ int main()
     // LINEAR_ACTIVATION_FORWARD
     //LINEAR_FORWARD
     
-    static float A_prev[948][243];
-    for( i = 1; i <=947 ; i++)
+    static float A_prev[assets + 1][243];
+    for( i = 1; i <= assets; i++)
     {
         for(j = 1; j <= 242; j++)
         {
