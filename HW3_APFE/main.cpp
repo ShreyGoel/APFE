@@ -123,7 +123,7 @@ int main()
             A_prev[i][j] =A[i][j];
         }
     }
-    static float Z1_inter[101][243],Z1[101][243];
+    static float Z1_inter[101][243],Z1[101][243], A1[101][243];
    // matrix multiplication
     for(i = 1; i <=100 ; i++)
     {
@@ -148,7 +148,15 @@ int main()
         }
     }
     
+    for( i = 1; i <=100 ; i++)
+    {
+        for(j = 1; j <= 242; j++)
+        {
+            A1[i][j] =sigmoid(Z1[i][j]);
+        }
+    }
     
      cout<<"1";
     return 0;
 }
+
