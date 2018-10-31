@@ -16,44 +16,20 @@ public:
 	{
 		return m_trainingDataFile.eof();
 	}
-	void getTopology(vector<unsigned> &topology);
 
 	// Returns the number of input values read from the file:
-	unsigned getNextInputs(vector<double> &inputVals);
-	unsigned getTargetOutputs(vector<double> &targetOutputVals);
 	unsigned getData(vector<vector<double>> &inputVals);
 
 private:
 	ifstream m_trainingDataFile;
 };
 
-void TrainingData::getTopology(vector<unsigned> &topology)
-{
-	string line;
-	string label;
-
-	getline(m_trainingDataFile, line);
-	stringstream ss(line);
-	ss >> label;
-	if(this->isEof())
-	{
-		abort();
-	}
-
-	while(!ss.eof())
-	{
-		unsigned n;
-		ss >> n;
-		topology.push_back(n);
-	}
-	return;
-}
-
 TrainingData::TrainingData(const string filename)
 {
 	m_trainingDataFile.open(filename.c_str());
 }
 
+// read txt file
 unsigned TrainingData::getData(vector<vector<double>> &data)
 {
     data.clear();
@@ -77,45 +53,6 @@ unsigned TrainingData::getData(vector<vector<double>> &data)
     }
 
     return data.size();
-}
-
-unsigned TrainingData::getNextInputs(vector<double> &inputVals)
-{
-    inputVals.clear();
-
-    string line;
-    getline(m_trainingDataFile, line);
-    stringstream ss(line);
-
-    string label;
-    ss >> label;
-
-    double oneValue;
-    while (ss >> oneValue) {
-        inputVals.push_back(oneValue);
-    }
-
-    return inputVals.size();
-}
-
-unsigned TrainingData::getTargetOutputs(vector<double> &targetOutputVals)
-{
-    targetOutputVals.clear();
-
-    string line;
-    getline(m_trainingDataFile, line);
-    stringstream ss(line);
-
-    string label;
-    ss>> label;
-    if (label.compare("out:") == 0) {
-        double oneValue;
-        while (ss >> oneValue) {
-            targetOutputVals.push_back(oneValue);
-        }
-    }
-
-    return targetOutputVals.size();
 }
 
 struct Connection
@@ -146,7 +83,14 @@ private:
 	static double transferFunction(double x);
 	static double transferFunctionDerivative(double x);
 	// randomWeight: 0 - 1
-	static double randomWeight(void) { return rand() / double(RAND_MAX); }
+
+	static double randomWeight(void) {
+	    default_random_engine generator; //seed
+        normal_distribution<double> distribution(0, 1); //mean followed by stdiv
+	    return 0.01* distribution(generator);
+
+	    }
+
 	double sumDOW(const Layer &nextLayer) const;
 	double m_outputVal;
 	vector<Connection> m_outputWeights;
@@ -154,7 +98,7 @@ private:
 	double m_gradient;
 };
 
-double Neuron::eta = 0.15; // overall net learning rate
+double Neuron::eta = 0.8; // overall net learning rate
 double Neuron::alpha = 0.5; // momentum, multiplier of last deltaWeight, [0.0..n]
 
 
@@ -356,7 +300,6 @@ Net::Net(const vector<unsigned> &topology)
 		// add a bias neuron to the layer:
 		for(unsigned neuronNum = 0; neuronNum <= topology[layerNum]; ++neuronNum){
 			m_layers.back().push_back(Neuron(numOutputs, neuronNum));
-			cout << "Mad a Neuron!" << endl;
 		}
 
 		// Force the bias node's output value to 1.0. It's the last neuron created above
@@ -375,46 +318,53 @@ void showVectorVals(string label, vector<double> &v)
 }
 int main()
 {
-    int assets = 947, days = 503;
+    int assets = 947, days = 504, m = 100, train_end = 242, lag = 10, test_begin = 253, test_end = 493;
+    int train_size = train_end+1;
+    int test_size = test_end - test_begin+1;
 	TrainingData trainData("russell_prices.txt");
 
-	vector<unsigned> topology;
+	vector<unsigned> topology = {assets, m, m, assets};
 
-    vector<vector<double>> data, inputVals, outputVals;
+    vector<vector<double>> data, input_train, output_train, input_test, output_test, returns;
 
-    /*
-	trainData.getTopology(topology);
+    trainData.getData(data);
+
 	Net myNet(topology);
 
-	vector<double> inputVals, targetVals, resultVals;
-	int trainingPass = 0;
-	while(!trainData.isEof())
-	{
-		++trainingPass;
-		cout << endl << "Pass" << trainingPass;
+    for(int i = 0; i < assets; i++){
+        vector<double> returns_row;
 
-		// Get new input data and feed it forward:
-		if(trainData.getNextInputs(inputVals) != topology[0])
-			break;
-		showVectorVals(": Inputs :", inputVals);
-		myNet.feedForward(inputVals);
+        for(int j=0; j<days; j++){
+            returns_row.push_back((data[i][j+1]/data[i][j]) - 1);
+            cout << data[i][j];
+            cout << returns_row[j];
+        }
 
-		// Collect the net's actual results:
-		myNet.getResults(resultVals);
-		showVectorVals("Outputs:", resultVals);
+        returns.push_back(returns_row);
+    }
 
-		// Train the net what the outputs should have been:
-		trainData.getTargetOutputs(targetVals);
-		showVectorVals("Targets:", targetVals);
-		assert(targetVals.size() == topology.back());
+	for (int k = 0; k<10; k++){
+        cout << k << " ";
+        for(int j = 0; j < train_end; j++){
+            vector<double> input_train_row, output_train_row, network_op;
 
-		myNet.backProp(targetVals);
+            for(int i=0; i<assets; i++){
+                input_train_row.push_back(returns[i][j]);
 
-		// Report how well the training is working, average over recnet
-		cout << "Net recent average error: "
-		     << myNet.getRecentAverageError() << endl;
+                // Train the net what the outputs should have been:
+                output_train_row.push_back(returns[i][j+lag]);
+            }
+
+            myNet.feedForward(input_train_row);
+
+            // Collect the net's actual results:
+            myNet.getResults(network_op);
+
+            myNet.backProp(output_train_row);
+
+        }
 	}
-
-	cout << endl << "Done" << endl; */
-
+	// Report how well the training is working, average over recnet
+    cout << "Net recent average error: "
+         << myNet.getRecentAverageError() << endl;
 }

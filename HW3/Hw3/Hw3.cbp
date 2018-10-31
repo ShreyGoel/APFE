@@ -32,6 +32,7 @@
 			<Add option="-Wall" />
 		</Compiler>
 		<Unit filename="neural-net.cpp" />
+		<Unit filename="russell_prices.txt" />
 		<Unit filename="trainingData.txt" />
 		<Extensions>
 			<code_completion />
