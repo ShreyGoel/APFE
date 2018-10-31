@@ -1,0 +1,10 @@
+# depslib dependency file v1.0
+1541013163 source:c:\users\shrey\documents\github\apfe\hw3\hw3\neural-net.cpp
+	<vector>
+	<iostream>
+	<cstdlib>
+	<cassert>
+	<cmath>
+	<fstream>
+	<sstream>
+
