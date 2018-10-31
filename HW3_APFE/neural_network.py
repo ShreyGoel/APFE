@@ -333,7 +333,7 @@ if __name__ == "__main__":
 	grads = L_model_backward(AL_arr, Y.values, caches)
 
 
-	final_parameters = update_parameters(parameters, grads, 0.01)
+	final_parameters = update_parameters(parameters, grads, 0.5)
 
 	# Testing for test dataset
 	Bt = sigmoid(returns_mat.iloc[:,253:494].values)
