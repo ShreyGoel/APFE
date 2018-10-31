@@ -72,6 +72,9 @@ def linear_forward(A, W, b):
     Z -- the input of the activation function, also called pre-activation parameter 
     cache -- a python dictionary containing "A", "W" and "b" ; stored for computing the backward pass efficiently
     """
+    # print(W.shape)
+    # print(A.shape)
+    # print(b.shape)
     
     Z = np.dot(W, A) + b
     
@@ -109,6 +112,7 @@ def linear_activation_forward(A_prev, W, b, activation = "sigmoid"):
     
     assert (A.shape == (W.shape[0], A_prev.shape[1]))
     cache = (linear_cache, activation_cache)
+
 
     return A, cache
 
@@ -181,11 +185,11 @@ def linear_backward(dZ, cache):
 	"""
 	A_prev, W, b = cache
 	m = A_prev.shape[1]
-	print("A=",A_prev.shape)
-	print("W=",W.shape)
-	print("C0=",cache[0].T.shape)
-	print("C1=",cache[1].T.shape)
-	print("dz=",dZ.shape)
+	# print("A=",A_prev.shape)
+	# print("W=",W.shape)
+	# print("C0=",cache[0].T.shape)
+	# print("C1=",cache[1].T.shape)
+	# print("dz=",dZ.shape)
 
 	dA_prev = np.dot(cache[1].T, dZ)
 	dW = np.dot(dZ, cache[0].T) / m
@@ -251,12 +255,8 @@ def L_model_backward(AL, output_matrix, caches):
 	dAL = (-2)*(Y-AL)
     
 	current_cache = caches[-1]
-	print(dAL.shape)
-	print(current_cache[1].shape)
-	print(L)
 	grads["dA" + str(L)], grads["dW" + str(L)], grads["db" + str(L)] = linear_backward(sigmoid_backward(dAL,current_cache[1]),current_cache[0])
 	for l in reversed(range(L-1)):
-		print(l)
         # lth layer: (RELU -> LINEAR) gradients.
         # Inputs: "grads["dA" + str(l + 2)], caches". Outputs: "grads["dA" + str(l + 1)] , grads["dW" + str(l + 1)] , grads["db" + str(l + 1)] 
 		dAL_cont = grads['dA3']
@@ -270,29 +270,45 @@ def L_model_backward(AL, output_matrix, caches):
 	return grads
 
 def update_parameters(parameters, grads, learning_rate):
-    """
-    Update parameters using gradient descent
+	"""
+	Update parameters using gradient descent
+	
+	Arguments:
+	parameters -- python dictionary containing your parameters 
+	grads -- python dictionary containing your gradients, output of L_model_backward
     
-    Arguments:
-    parameters -- python dictionary containing your parameters 
-    grads -- python dictionary containing your gradients, output of L_model_backward
-    
-    Returns:
-    parameters -- python dictionary containing your updated parameters 
-                  parameters["W" + str(l)] = ... 
+	Returns:
+	parameters -- python dictionary containing your updated parameters 
+	              parameters["W" + str(l)] = ... 
                   parameters["b" + str(l)] = ...
-    """
+	"""
     
-    L = len(parameters) // 2 # number of layers in the neural network
-
-    # Update rule for each parameter. Use a for loop.
+	L = len(parameters) // 2 # number of layers in the neural network
+	# Update rule for each parameter. Use a for loop.
     ### START CODE HERE ### (≈ 3 lines of code)
-    for l in range(L):
-        parameters["W" + str(l + 1)] = parameters["W" + str(l + 1)] - learning_rate * grads["dW" + str(l + 1)]
-        parameters["b" + str(l + 1)] = parameters["b" + str(l + 1)] - learning_rate * grads["db" + str(l + 1)]
+	for l in range(L):
+		t = learning_rate * grads["db" + str(l + 1)]
+		bias_list = []
+		for term in t.tolist():
+			temp = [term]
+			bias_list.append(temp)
+		
+		bias_array = np.asarray(bias_list)
+		
+		parameters["W" + str(l + 1)] = parameters["W" + str(l + 1)] - learning_rate * grads["dW" + str(l + 1)]
+		#parameters["b" + str(l + 1)] = parameters["b" + str(l + 1)] - learning_rate * grads["db" + str(l + 1)]
+		parameters["b" + str(l + 1)] = parameters["b" + str(l + 1)] - bias_array
     ### END CODE HERE ###
         
-    return parameters
+	return parameters
+
+def predict(X, parameters):
+	pred_res, cache_res = L_model_forward(X, final_parameters)
+	AL_post = pd.DataFrame(pred_res, index=range(X.shape[0]), columns=range(X.shape[1]))
+	return AL_post
+
+## def predict(parameters, train, test):
+
 
 
 if __name__ == "__main__":
@@ -309,17 +325,36 @@ if __name__ == "__main__":
 	parameters = initialize_parameters_deep(layer_dims)
 
 	## Test Case 1 for linear_forward and linear activation forward
-	W = parameters["W1"]
 	B = sigmoid(returns_mat.iloc[:,:242].values)
 	A = pd.DataFrame(B[0], index=range(returns_mat.iloc[:,:242].shape[0]), columns=range(returns_mat.iloc[:,:242].shape[1]))
-	b = parameters["b1"]
 	AL_arr, caches = L_model_forward(A, parameters)
 	AL = pd.DataFrame(AL_arr, index=range(returns_mat.iloc[:,:242].shape[0]), columns=range(returns_mat.iloc[:,:242].shape[1]))
 	Y = returns_mat.iloc[:, 10:252]
-	cost = compute_cost(AL, Y)
-	print(cost)
 	grads = L_model_backward(AL_arr, Y.values, caches)
 
+
+	final_parameters = update_parameters(parameters, grads, 0.01)
+
+	# Testing for test dataset
+	Bt = sigmoid(returns_mat.iloc[:,253:494].values)
+	Yt = returns_mat.iloc[:, 262:]
+	At = pd.DataFrame(Bt[0], index=range(returns_mat.iloc[:,253:494].shape[0]), columns=range(returns_mat.iloc[:,253:494].shape[1]))
+	ALt = predict(A, final_parameters)
+
+	cost_pre = compute_cost(At, Y)
+	cost_post = compute_cost(ALt, Y)
+	print("Cost before training = ", cost_pre)
+	print("Cost after training = ", cost_post)
+
+
+	# Prediction for last 10 days
+	Bp = sigmoid(returns_mat.iloc[:,493:].values)
+	Ap = pd.DataFrame(Bp[0], index=range(returns_mat.iloc[:,493:].shape[0]), columns=range(returns_mat.iloc[:,493:].shape[1]))
+	ALp = predict(Ap, final_parameters)
+	colnames = ["t+"+str(i+1) for i in ALp.columns]
+	ALp.columns = colnames
+	print("The final prediction of the returns of the 947 securites from t+1 to t+10:")
+	print(ALp)
 
 
 	# print("W1 = " + str(parameters["W1"]))
