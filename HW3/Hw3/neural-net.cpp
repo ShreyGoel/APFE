@@ -85,10 +85,10 @@ private:
 	// randomWeight: 0 - 1
 
 	static double randomWeight(void) {
-	    default_random_engine generator; //seed
-        normal_distribution<double> distribution(0, 1); //mean followed by stdiv
-	    return 0.01* distribution(generator);
-
+	    //default_random_engine generator; //seed
+        //normal_distribution<double> distribution(0, 1); //mean followed by stdiv
+        double num = 0.001 - 0.002* rand()/ float(RAND_MAX);
+	    return num;
 	    }
 
 	double sumDOW(const Layer &nextLayer) const;
@@ -116,10 +116,10 @@ void Neuron::updateInputWeights(Layer &prevLayer)
 				// Individual input, magnified by the gradient and train rate:
 				eta
 				* neuron.getOutputVal()
-				* m_gradient
+				* m_gradient;
 				// Also add momentum = a fraction of the previous delta weight
-				+ alpha
-				* oldDeltaWeight;
+				//+ alpha
+				//* oldDeltaWeight;
 		neuron.m_outputWeights[m_myIndex].deltaWeight = newDeltaWeight;
 		neuron.m_outputWeights[m_myIndex].weight += newDeltaWeight;
 	}
@@ -336,8 +336,6 @@ int main()
 
         for(int j=0; j<days; j++){
             returns_row.push_back((data[i][j+1]/data[i][j]) - 1);
-            cout << data[i][j];
-            cout << returns_row[j];
         }
 
         returns.push_back(returns_row);
