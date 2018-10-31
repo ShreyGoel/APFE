@@ -195,11 +195,11 @@ public:
 	void backProp(const vector<double> &targetVals);
 	void getResults(vector<double> &resultVals) const;
 	double getRecentAverageError(void) const { return m_recentAverageError; }
+	double m_error;
+	double m_recentAverageError;
 
 private:
 	vector<Layer> m_layers; //m_layers[layerNum][neuronNum]
-	double m_error;
-	double m_recentAverageError;
 	static double m_recentAverageSmoothingFactor;
 };
 
@@ -336,12 +336,17 @@ int main()
 
         for(int j=0; j<days; j++){
             returns_row.push_back((data[i][j+1]/data[i][j]) - 1);
+
         }
 
         returns.push_back(returns_row);
     }
 
-	for (int k = 0; k<10; k++){
+    ofstream out("out.txt");
+    streambuf *coutbuf = cout.rdbuf(); //save old buf
+    cout.rdbuf(out.rdbuf());
+
+	for (int k = 0; k<300; k++){
         cout << k << " ";
         for(int j = 0; j < train_end; j++){
             vector<double> input_train_row, output_train_row, network_op;
@@ -361,8 +366,35 @@ int main()
             myNet.backProp(output_train_row);
 
         }
+
+        // Report how well the training is working, average over recnet
+        double error = myNet.getRecentAverageError();
+        cout << "Net training average error: "
+             << error << endl;
+        if(error < 100.0){
+
+            break;
+        }
 	}
-	// Report how well the training is working, average over recnet
-    cout << "Net recent average error: "
-         << myNet.getRecentAverageError() << endl;
+
+    for(int j = test_begin; j < test_end; j++){
+        vector<double> input_test_row, output_test_row, network_op_test;
+
+        for(int i=0; i<assets; i++){
+            input_test_row.push_back(returns[i][j]);
+
+            // Train the net what the outputs should have been:
+            output_test_row.push_back(returns[i][j+lag]);
+        }
+
+        myNet.feedForward(input_test_row);
+
+        // Collect the net's actual results:
+        myNet.getResults(network_op_test);
+
+        showVectorVals("network_op_test", network_op_test);
+        showVectorVals("output_test_row", output_test_row);
+
+    }
+
 }
