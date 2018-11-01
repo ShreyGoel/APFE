@@ -319,6 +319,7 @@ if __name__ == "__main__":
 	
 	assets = returns_mat.shape[0]
 	m = 100
+	learning_rate = 0.8
 
 	layer_dims = [assets, m, m, assets]
 
@@ -333,18 +334,18 @@ if __name__ == "__main__":
 	grads = L_model_backward(AL_arr, Y.values, caches)
 
 
-	final_parameters = update_parameters(parameters, grads, 0.5)
+	final_parameters = update_parameters(parameters, grads, learning_rate)
 
 	# Testing for test dataset
 	Bt = sigmoid(returns_mat.iloc[:,253:494].values)
 	Yt = returns_mat.iloc[:, 262:]
 	At = pd.DataFrame(Bt[0], index=range(returns_mat.iloc[:,253:494].shape[0]), columns=range(returns_mat.iloc[:,253:494].shape[1]))
-	ALt = predict(A, final_parameters)
+	ALt = predict(At, final_parameters)
 
-	cost_pre = compute_cost(At, Y)
-	cost_post = compute_cost(ALt, Y)
-	print("Cost before training = ", cost_pre)
-	print("Cost after training = ", cost_post)
+	cost_pre = compute_cost(At, Yt)
+	cost_post = compute_cost(ALt, Yt)
+	print("Cost before training = ", ("%0.15f" % cost_pre).rstrip('0'))
+	print("Cost after training = ", ("%0.15f" % cost_post).rstrip('0'))
 
 
 	# Prediction for last 10 days
