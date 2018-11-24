@@ -9,7 +9,7 @@ from mysolver import lpsolver
 
 #now open and read data file
 try:
-    datafile = open("arb.dat", 'r') # opens the data file
+    datafile = open(sys.argv[1], 'r') # opens the data file "arb.dat"
 except IOError:
     sys.exit("Cannot open file")
 
@@ -48,8 +48,8 @@ while k <= numscen:
     k += 1
 
 
-sigmafile = "example.dat"
-sigma_file = open("example.dat", 'r')
+sigmafile = sys.argv[2] # "example.dat"
+sigma_file = open(sys.argv[2], 'r')
 slines = sigma_file.readlines();
 k = 0
 sigmalist = []

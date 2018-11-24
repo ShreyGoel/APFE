@@ -62,12 +62,10 @@ def initialize_parameters_deep(layer_dims):
 def linear_forward(A, W, b):
     """
     Implement the linear part of a layer's forward propagation.
-
     Arguments:
     A -- activations from previous layer (or input data): (size of previous layer, number of examples)
     W -- weights matrix: numpy array of shape (size of current layer, size of previous layer)
     b -- bias vector, numpy array of shape (size of the current layer, 1)
-
     Returns:
     Z -- the input of the activation function, also called pre-activation parameter 
     cache -- a python dictionary containing "A", "W" and "b" ; stored for computing the backward pass efficiently
@@ -88,13 +86,11 @@ def linear_forward(A, W, b):
 def linear_activation_forward(A_prev, W, b, activation = "sigmoid"):
     """
     Implement the forward propagation for the LINEAR->ACTIVATION layer
-
     Arguments:
     A_prev -- activations from previous layer (or input data): (size of previous layer, number of examples)
     W -- weights matrix: numpy array of shape (size of current layer, size of previous layer)
     b -- bias vector, numpy array of shape (size of the current layer, 1)
     activation -- the activation to be used in this layer, stored as a text string: "sigmoid" or "relu"
-
     Returns:
     A -- the output of the activation function, also called the post-activation value 
     cache -- a python dictionary containing "linear_cache" and "activation_cache";
@@ -163,7 +159,7 @@ def compute_cost(AL, Y):
     cost = 0
     for i in range(AL.shape[0]):
     	for j in range(AL.shape[1]):
-    		cost = np.square(Y.iloc[i,j] - AL.iloc[i,j])
+    		cost += np.square(Y.iloc[i,j] - AL.iloc[i,j])
     
     return cost
 
@@ -173,11 +169,9 @@ def compute_cost(AL, Y):
 def linear_backward(dZ, cache):
 	"""
 	Implement the linear portion of backward propagation for a single layer (layer l)
-
 	Arguments:
 	dZ -- Gradient of the cost with respect to the linear output (of current layer l)
 	cache -- tuple of values (A_prev, W, b) coming from the forward propagation in the current layer
-
 	Returns:
 	dA_prev -- Gradient of the cost with respect to the activation (of the previous layer l-1), same shape as A_prev
 	dW -- Gradient of the cost with respect to W (current layer l), same shape as W
@@ -364,4 +358,3 @@ if __name__ == "__main__":
 	# print("b2 = " + str(parameters["b2"]))
 	# print("W3 = " + str(parameters["W3"]))
 	# print("b3 = " + str(parameters["b3"]))
-
