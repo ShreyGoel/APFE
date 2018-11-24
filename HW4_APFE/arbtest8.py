@@ -5,7 +5,7 @@ from arbwriter import writelp
 from mysolver import lpsolver
 
 #if len(sys.argv) != 3:
-#    sys.exit("usage: arbtest.py datafilename lpfilename\n")
+#      sys.exit("usage: arbtest.py datafilename lpfilename\n")
 
 #now open and read data file
 try:
@@ -47,14 +47,29 @@ while k <= numscen:
         j += 1
     k += 1
 
+
+sigmafile = "example.dat"
+sigma_file = open("example.dat", 'r')
+slines = sigma_file.readlines();
+k = 0
+sigmalist = []
+while k < (numscen)*(numsec+1):
+    linenow = slines[k].split()
+    print(linenow)
+    sigmalist.append(float(linenow[2]))
+    k = k + 1
+
+
+
+
 #now write LP file, now done in a separate function (should read data this way, as well)
 
-lpwritecode = writelp("demo.lp", p, numsec, numscen)
+lpwritecode = writelp("model.lp", p, numsec, numscen, sigmalist)
 
-print("wrote LP to file", "demo.lp","with code", lpwritecode)
+print("wrote LP to file", "model.lp","with code", lpwritecode)
 
 #now solve lp 
 
-lpsolvecode = lpsolver("demo.lp", "test.log")
+lpsolvecode = lpsolver("model.lp", "model.log")
 
-print("solved LP at", "demo.lp","with code", lpsolvecode)
+print("solved LP at", "model.lp","with code", lpsolvecode)

@@ -12,7 +12,7 @@ def writelp(lpfilename, prices, numsec, numscen, sigma):
     print("now writing LP to file")
     lpfile.write("Minimize ")
     j = 0
-    counter = 0
+    counter = 1
 
     while j <= numsec:
         if prices[j] >= 0:
@@ -22,7 +22,7 @@ def writelp(lpfilename, prices, numsec, numscen, sigma):
         j += 1
     lpfile.write("\nSubject to\n")
 
-    k = 0
+    k = 1
     while k <= numscen:
         # write constraint for scenario k
 
@@ -51,7 +51,7 @@ def writelp(lpfilename, prices, numsec, numscen, sigma):
         lpfile.write(" >= 0\n")
         k += 1
 
-    k = 0
+    k = 1
     
     while k <= numscen:
         # write constraint for scenario k
@@ -62,8 +62,8 @@ def writelp(lpfilename, prices, numsec, numscen, sigma):
             index_sigma = j
             lpfile.write("scen_" + str(counter) +": ")    
             
-            lpfile.write("+ ")
-            lpfile.write( " u" + str(k)+ str(j)+" - "+" v" + str(k)+ str(j)+" = x"+ str(j)+"\n")
+            lpfile.write("+")
+            lpfile.write( " u" + str(k)+ str(j)+" -"+" v" + str(k)+ str(j) +" - x" + str(j) + " = 0" + "\n")
             
             counter = counter + 1 
 
@@ -80,7 +80,7 @@ def writelp(lpfilename, prices, numsec, numscen, sigma):
         j += 1
     
 
-    k=0
+    k=1
     while k <= numscen:
         # write constraint for scenario k
         #lpfile.write("scen_u_v" + str(k+numsec) +": ")
