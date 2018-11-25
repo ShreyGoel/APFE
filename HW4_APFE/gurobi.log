@@ -858,3 +858,25 @@ Iteration    Objective       Primal Inf.    Dual Inf.      Time
 
 Solved in 10 iterations and 0.00 seconds
 Optimal objective -9.761092150e+00
+
+Gurobi 7.0.2 (win64, Python) logging started 11/24/18 19:04:34
+
+Read LP format model from file model.lp
+Reading time = 0.00 seconds
+: 10 rows, 20 columns, 40 nonzeros
+Optimize a model with 10 rows, 20 columns and 40 nonzeros
+Coefficient statistics:
+  Matrix range     [3e-01, 9e+00]
+  Objective range  [1e+00, 9e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [0e+00, 0e+00]
+Presolve removed 0 rows and 3 columns
+Presolve time: 0.00s
+Presolved: 10 rows, 17 columns, 34 nonzeros
+
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+       0   -1.5300000e+01   7.070000e+00   0.000000e+00      0s
+      10   -9.7610922e+00   0.000000e+00   0.000000e+00      0s
+
+Solved in 10 iterations and 0.00 seconds
+Optimal objective -9.761092150e+00
