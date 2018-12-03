@@ -29,7 +29,7 @@
     <ClCompile Include="dllmain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\gurobi751\win64\examples\c++\mip1_c++.cpp">
+    <ClCompile Include="..\..\first.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
