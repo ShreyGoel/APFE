@@ -38,83 +38,40 @@ int arbitrage(double *prices, double n, double K, double r, int N, double *x)
 	int i, j;
 	int *cind;
 	double *cval;
+	char *vtype;
+	double *obj;
 
 	retcode = GRBloadenv(&env, "first.log");
-	if (retcode) goto BACK;
 
-	/* Create initial model */
-	retcode = GRBnewmodel(env, &model, "first", n_assets + 1, NULL, NULL, NULL, NULL, NULL);
-	if (retcode) goto BACK;
+	vtype = (char *)calloc(2*n_assets + 1, sizeof(char));
+	obj = (double *)calloc(2 * n_assets + 1, sizeof(double));
 
-
-	/* initialize variables */
-	for (j = 0; j <= n_assets; j++) {
-		if (j == 0) {
-
-			string p = "x" + to_string(j);
-			const char *c = p.c_str();
-			retcode = GRBsetstrattrelement(model, "VarName", j, c);
-			if (retcode) goto BACK;
-
-			retcode = GRBsetdblattrelement(model, "Obj", j, 1);
-			if (retcode) goto BACK;
-
-			retcode = GRBsetdblattrelement(model, "LB", j, 0.0);
-			if (retcode) goto BACK;
-			
-			/*
-			string q = "y" + to_string(j);
-			const char *d = p.c_str();
-			retcode = GRBsetstrattrelement(model, "VarName", j + n_assets + 1, c);
-			if (retcode) goto BACK;
-
-			retcode = GRBsetdblattrelement(model, "Obj", j + n_assets + 1, 1);
-			if (retcode) goto BACK;
-
-			retcode = GRBsetdblattrelement(model, "VType", j + n_assets + 1, 'B');
-			if (retcode) goto BACK;
-
-			retcode = GRBsetdblattrelement(model, "LB", j + n_assets + 1, 0.0);
-			if (retcode) goto BACK;
-			*/
+	for (i = 0; i < 2 * n_assets + 1; i++) {
+		
+		if (i <= n_assets) {
+			if (i == 0) {
+				obj[i] = 1;
+			}
+			else {
+				obj[i] = prices[i - 1];
+			}
+			vtype[i] = GRB_CONTINUOUS;
 		}
 		else {
-
-
-			string p = "x" + to_string(j);
-			const char *c = p.c_str();
-			retcode = GRBsetstrattrelement(model, "VarName", j, c);
-			if (retcode) goto BACK;
-
-			retcode = GRBsetdblattrelement(model, "Obj", j, prices[j-1]);
-			if (retcode) goto BACK;
-
-			retcode = GRBsetdblattrelement(model, "LB", j, 0.0);
-			if (retcode) goto BACK;
-			
-			/*
-			string q = "y" + to_string(j);
-			const char *d = p.c_str();
-			retcode = GRBsetstrattrelement(model, "VarName", j + n_assets + 1, c);
-			if (retcode) goto BACK;
-
-			retcode = GRBsetdblattrelement(model, "Obj", j + n_assets + 1, 1);
-			if (retcode) goto BACK;
-
-			retcode = GRBsetdblattrelement(model, "VType", j + n_assets + 1, 'B');
-			if (retcode) goto BACK;
-
-			retcode = GRBsetdblattrelement(model, "LB", j + n_assets + 1, 0.0);
-			if (retcode) goto BACK;
-			*/
+			obj[i] = 0;
+			vtype[i] = GRB_BINARY;
 		}
+
 	}
+
+	/* Create initial model */
+	retcode = GRBnewmodel(env, &model, "first", 2*n_assets + 1, obj, NULL, NULL, vtype, NULL);
 
 	/** now we will add one constraint at a time **/
 	/** we need to have a couple of auxiliary arrays **/
 
-	cind = (int *)calloc(n_assets+1, sizeof(int));
-	cval = (double *)calloc(n_assets+1, sizeof(double));
+	cind = (int *)calloc(n_assets + 1, sizeof(int));
+	cval = (double *)calloc(n_assets + 1, sizeof(double));
 
 
 	for (j = 0; j <= n_assets; j++) {
@@ -125,15 +82,43 @@ int arbitrage(double *prices, double n, double K, double r, int N, double *x)
 		cval[0] = 1 + r;
 
 		for (j = 0; j < n_assets; j++) {
-
-				cval[j + 1] = prices[i*n_assets + j];
+				
+			cval[j + 1] = prices[i*n_assets + j];
+				
 		}
 
 		string name_temp = to_string(i) + "_constraint";
 		const char *c = name_temp.c_str();
 		retcode = GRBaddconstr(model, n_assets + 1, cind, cval, GRB_GREATER_EQUAL, 0, c);
-		if (retcode) goto BACK;
 	}
+
+	// add constraints x <= y or y - x >= 0 and sum(y) <= N
+
+	for (j = 1; j <= n_assets; j++) {
+
+		int ind[] = { j, j + n_assets };
+		double val[] = { -1, 1 };
+
+		string name_temp = to_string(j + n_scenarios) + "_constraint";
+		const char *c = name_temp.c_str();
+		retcode = GRBaddconstr(model, 2, ind, val, GRB_GREATER_EQUAL, 0, c);
+
+	}
+
+	// add constraints x <= y or y - x >= 0 and sum(y) <= N
+
+	for (j = 0; j < n_assets; j++) {
+
+		cval[j] = -1;
+		cind[j] = j + n_assets + 1;
+		
+	}
+
+	string name_temp = to_string(n_scenarios + 1 + n_assets) + "_constraint";
+	const char *c = name_temp.c_str();
+	retcode = GRBaddconstr(model, n_assets, cind, cval, GRB_GREATER_EQUAL, -N, c);
+	if (retcode) goto BACK;
+	
 
 	retcode = GRBupdatemodel(model);
 	if (retcode) goto BACK;
@@ -153,13 +138,13 @@ int arbitrage(double *prices, double n, double K, double r, int N, double *x)
 
 
 	retcode = GRBgetdblattrarray(model,
-		GRB_DBL_ATTR_X, 0, n_assets,
+		GRB_DBL_ATTR_X, 0, n_assets+1,
 		x);
 	if (retcode) goto BACK;
 
 	/** now let's see the values **/
 
-	for (j = 0; j < n_assets; j++) {
+	for (j = 0; j <= n_assets; j++) {
 		printf("%s = %g\n", "x" + to_string(j), x[j]);
 	}
 

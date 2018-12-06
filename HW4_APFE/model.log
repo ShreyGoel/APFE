@@ -1,15 +1,21 @@
 will try to read LP file atmodel.lpnow solving LP
-variables = 20
-constraints = 10
-Optimal objective = -9.76109
-9 nonzero variables in solution
+variables = 25
+constraints = 12
+Optimal objective = -4.9
+15 nonzero variables in solution
+x0 = -1.0
 x1 = -1.0
-x2 = 0.3754266211604096
+x2 = -1.0
 x3 = 1.0
+x4 = 0.6800000000000002
+v10 = 1.0
 v11 = 1.0
-u12 = 0.37542662116040953
+v12 = 1.0
 u13 = 1.0
+u14 = 0.68
+v20 = 1.0
 v21 = 1.0
-u22 = 0.3754266211604096
+v22 = 1.0
 u23 = 1.0
+u24 = 0.6799999999999999
 bye.
