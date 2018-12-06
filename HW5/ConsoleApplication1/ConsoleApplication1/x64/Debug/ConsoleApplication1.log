@@ -1,7 +1,7 @@
 ﻿  first.cpp
+c:\users\shrey\documents\github\apfe\hw5\first.cpp(26): error C3861: 'arbitrage': identifier not found
+c:\users\shrey\documents\github\apfe\hw5\first.cpp(35): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+c:\users\shrey\documents\github\apfe\hw5\first.cpp(35): warning C4244: 'initializing': conversion from 'double' to 'const int', possible loss of data
 c:\users\shrey\documents\github\apfe\hw5\first.cpp(36): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
 c:\users\shrey\documents\github\apfe\hw5\first.cpp(36): warning C4244: 'initializing': conversion from 'double' to 'const int', possible loss of data
-c:\users\shrey\documents\github\apfe\hw5\first.cpp(37): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-c:\users\shrey\documents\github\apfe\hw5\first.cpp(37): warning C4244: 'initializing': conversion from 'double' to 'const int', possible loss of data
-c:\users\shrey\documents\github\apfe\hw5\first.cpp(148): warning C4477: 'printf' : format string '%s' requires an argument of type 'char *', but variadic argument 1 has type 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
-  ConsoleApplication1.vcxproj -> C:\Users\Shrey\Documents\GitHub\APFE\HW5\ConsoleApplication1\x64\Debug\ConsoleApplication1.exe
+c:\users\shrey\documents\github\apfe\hw5\first.cpp(147): warning C4477: 'printf' : format string '%s' requires an argument of type 'char *', but variadic argument 1 has type 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'

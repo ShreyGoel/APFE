@@ -1,13 +1,11 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-
-
+#include "impHeaders.h"
 #include <gurobi_c++.h>
 
 using namespace std;
 
-int arbitrage(double *prices, double n, double K, double r, int N, double *x);
 
 int main(int argc, char **argv)
 {
@@ -15,7 +13,7 @@ int main(int argc, char **argv)
 	double *x;
 	int n = 4, K = 3, N = 2;
 	double r = 0.05;
-	obj = (double *)calloc(n*(K+1), sizeof(double));
+	obj = (double *)calloc(n*(K + 1), sizeof(double));
 	x = (double *)calloc(n, sizeof(double));
 
 
@@ -25,7 +23,7 @@ int main(int argc, char **argv)
 	obj[12] = 2.0;  obj[13] = 9.0; obj[14] = -9.0; obj[15] = 5.0;
 
 	arbitrage(obj, n, K, r, N, x);
-	
+
 }
 
 int arbitrage(double *prices, double n, double K, double r, int N, double *x)
@@ -43,11 +41,11 @@ int arbitrage(double *prices, double n, double K, double r, int N, double *x)
 
 	retcode = GRBloadenv(&env, "first.log");
 
-	vtype = (char *)calloc(2*n_assets + 1, sizeof(char));
+	vtype = (char *)calloc(2 * n_assets + 1, sizeof(char));
 	obj = (double *)calloc(2 * n_assets + 1, sizeof(double));
 
 	for (i = 0; i < 2 * n_assets + 1; i++) {
-		
+
 		if (i <= n_assets) {
 			if (i == 0) {
 				obj[i] = 1;
@@ -65,7 +63,7 @@ int arbitrage(double *prices, double n, double K, double r, int N, double *x)
 	}
 
 	/* Create initial model */
-	retcode = GRBnewmodel(env, &model, "first", 2*n_assets + 1, obj, NULL, NULL, vtype, NULL);
+	retcode = GRBnewmodel(env, &model, "first", 2 * n_assets + 1, obj, NULL, NULL, vtype, NULL);
 
 	/** now we will add one constraint at a time **/
 	/** we need to have a couple of auxiliary arrays **/
@@ -82,9 +80,9 @@ int arbitrage(double *prices, double n, double K, double r, int N, double *x)
 		cval[0] = 1 + r;
 
 		for (j = 0; j < n_assets; j++) {
-				
+
 			cval[j + 1] = prices[i*n_assets + j];
-				
+
 		}
 
 		string name_temp = to_string(i) + "_constraint";
@@ -111,14 +109,14 @@ int arbitrage(double *prices, double n, double K, double r, int N, double *x)
 
 		cval[j] = -1;
 		cind[j] = j + n_assets + 1;
-		
+
 	}
 
 	string name_temp = to_string(n_scenarios + 1 + n_assets) + "_constraint";
 	const char *c = name_temp.c_str();
 	retcode = GRBaddconstr(model, n_assets, cind, cval, GRB_GREATER_EQUAL, -N, c);
 	if (retcode) goto BACK;
-	
+
 
 	retcode = GRBupdatemodel(model);
 	if (retcode) goto BACK;
@@ -138,7 +136,7 @@ int arbitrage(double *prices, double n, double K, double r, int N, double *x)
 
 
 	retcode = GRBgetdblattrarray(model,
-		GRB_DBL_ATTR_X, 0, n_assets+1,
+		GRB_DBL_ATTR_X, 0, n_assets + 1,
 		x);
 	if (retcode) goto BACK;
 
