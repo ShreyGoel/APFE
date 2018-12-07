@@ -1,8 +1,12 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
+#include <stdio.h>
+#include <stdlib.h>
 #include "impHeaders.h"
 
+
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
+using namespace std;
 
 namespace UnitTest2
 {		
@@ -12,20 +16,13 @@ namespace UnitTest2
 		
 		TEST_METHOD(TestMethod1)
 		{
-			double *obj = NULL;
-			double *x;
-			int n = 4, K = 3, N = 2;
-			double r = 0.05;
-			obj = (double *)calloc(n*(K + 1), sizeof(double));
-			x = (double *)calloc(n, sizeof(double));
+			string file_name = "arb.dat";
+			vars var = read_file(file_name);
+			Assert::AreEqual(arbitrage(var.obj, var.n, var.K, var.r, var.N, var.x), 0);
 
+		BACK:
 
-			obj[0] = 2.0; obj[1] = 5.0; obj[2] = 7; obj[3] = 3.5;
-			obj[4] = 1.0; obj[5] = -4; obj[6] = 1.0; obj[7] = 0.0;
-			obj[8] = 2.0; obj[9] = 7.0; obj[10] = -5.0; obj[11] = 0.0;
-			obj[12] = 2.0;  obj[13] = 9.0; obj[14] = -9.0; obj[15] = 5.0;
-
-			Assert::AreEqual(arbitrage(obj, n, K, r, N, x), 0);
+			return;
 		}
 
 	};

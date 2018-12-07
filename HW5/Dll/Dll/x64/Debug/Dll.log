@@ -1,10 +1,11 @@
 ﻿  stdafx.cpp
   first.cpp
-c:\users\shrey\documents\github\apfe\hw5\first.cpp(34): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-c:\users\shrey\documents\github\apfe\hw5\first.cpp(34): warning C4244: 'initializing': conversion from 'double' to 'const int', possible loss of data
-c:\users\shrey\documents\github\apfe\hw5\first.cpp(35): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-c:\users\shrey\documents\github\apfe\hw5\first.cpp(35): warning C4244: 'initializing': conversion from 'double' to 'const int', possible loss of data
-c:\users\shrey\documents\github\apfe\hw5\first.cpp(146): warning C4477: 'printf' : format string '%s' requires an argument of type 'char *', but variadic argument 1 has type 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+c:\users\shrey\documents\github\apfe\hw5\dll\dll\impheaders.h(21): warning C4091: '__declspec(dllexport)': ignored on left of 'vars' when no variable is declared
+c:\users\shrey\documents\github\apfe\hw5\first.cpp(53): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+c:\users\shrey\documents\github\apfe\hw5\first.cpp(53): warning C4244: 'initializing': conversion from 'double' to 'const int', possible loss of data
+c:\users\shrey\documents\github\apfe\hw5\first.cpp(54): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+c:\users\shrey\documents\github\apfe\hw5\first.cpp(54): warning C4244: 'initializing': conversion from 'double' to 'const int', possible loss of data
+c:\users\shrey\documents\github\apfe\hw5\first.cpp(165): warning C4477: 'printf' : format string '%s' requires an argument of type 'char *', but variadic argument 1 has type 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
   dllmain.cpp
   Generating Code...
      Creating library C:\Users\Shrey\Documents\GitHub\APFE\HW5\UnitTest2\x64\Debug\Dll.lib and object C:\Users\Shrey\Documents\GitHub\APFE\HW5\UnitTest2\x64\Debug\Dll.exp

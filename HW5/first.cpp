@@ -4,23 +4,42 @@
 #include "impHeaders.h"
 #include <gurobi_c++.h>
 
-using namespace std;
 
 
 int main(int argc, char **argv)
 {
 	double *obj = NULL;
 	double *x;
-	int n = 4, K = 3, N = 2;
-	double r = 0.05;
+	int n, K, N;
+	double r;
+
+	ifstream fin("arb.dat");
+	string num;
+	std::vector<string> vec;
+
+	while (fin >> num)
+	{
+		if (num != " ") {
+			vec.push_back(num);
+		}
+
+	}
+
+	n = stoi(vec[1]);
+	K = stoi(vec[3]);
+	r = stod(vec[5]);
+	N = stoi(vec[7]);
+
 	obj = (double *)calloc(n*(K + 1), sizeof(double));
 	x = (double *)calloc(n, sizeof(double));
 
-
-	obj[0] = 2.0; obj[1] = 5.0; obj[2] = 7; obj[3] = 3.5;
-	obj[4] = 1.0; obj[5] = -4; obj[6] = 1.0; obj[7] = 0.0;
-	obj[8] = 2.0; obj[9] = 7.0; obj[10] = -5.0; obj[11] = 0.0;
-	obj[12] = 2.0;  obj[13] = 9.0; obj[14] = -9.0; obj[15] = 5.0;
+	for (int i = 0; i <= K; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			obj[j + i * n] = stod(vec[9 + j + i * (n + 1)]);
+		}
+	}
 
 	arbitrage(obj, n, K, r, N, x);
 
@@ -154,4 +173,37 @@ BACK:
 	printf("\nexiting with retcode %d\n", retcode);
 	return retcode;
 
+}
+
+vars read_file(string file_name)
+{
+	vars var;
+	ifstream fin(file_name);
+	string num;
+	vector<string> vec;
+
+
+	while (fin >> num)
+	{
+		if (num != " ") {
+			vec.push_back(num);
+		}
+	}
+
+	var.n = stoi(vec[1]);
+	var.K = stoi(vec[3]);
+	var.r = stod(vec[5]);
+	var.N = stoi(vec[7]);
+	var.obj = (double *)calloc(var.n*(var.K + 1), sizeof(double));
+	var.x = (double *)calloc(var.n, sizeof(double));
+
+	for (int i = 0; i <= var.K; i++)
+	{
+		for (int j = 0; j < var.n; j++)
+		{
+			var.obj[j + i * var.n] = stod(vec[9 + j + i * (var.n + 1)]);
+		}
+	}
+
+	return var;
 }
