@@ -1,1 +1,0 @@
-int arbitrage(double *prices, double n, double K, double r, int N, double *x);
